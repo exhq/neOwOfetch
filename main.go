@@ -1,16 +1,26 @@
 package main
 
 import (
-    "fmt"
-    "strings"
-    "os"
-    "os/exec"
-    "cpu"
+	"fmt"
+	"os"
+	"os/exec"
+	"strconv"
+	"strings"
 )
 
+func getHostname() string {
+	cmd := exec.Command("uname", "-n")
+	shell, _ := cmd.Output()
+	return strings.Replace(string(shell), "\n", "", -1)
+}
+func getUsername() string {
+	cmd := exec.Command("whoami")
+	shell, _ := cmd.Output()
+	return strings.Replace(string(shell), "\n", "", -1)
+}
 func getLogo() {
 }
-func getDistro() string{
+func getDistro() string {
 	distro, err := os.Open("/etc/os-release")
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -29,34 +39,27 @@ func getDistro() string{
 			distro_tuples[kv[0]] = kv[1]
 		}
 	}
-	return strings.Trim(distro_tuples["PRETTY_NAME"], "\"") 
-}
-func getHost() {
+	return strings.Trim(distro_tuples["PRETTY_NAME"], "\"")
 }
 func getKernel() string {
-    cmd := exec.Command("uname","-r")
-    kernel, err := cmd.Output()
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
-    return string(kernel)
+	cmd := exec.Command("uname", "-r")
+	kernel, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err.Error())
+		return "fuck you"
+	}
+	return string(kernel)
 }
 func getUptime() {
+
 }
 func getPackages() {
 }
 func getShell() string {
-    cmd := exec.Command("echo","$SHELL")
-    shell, err := cmd.Output()
-    if err != nil {
-        fmt.Println(err.Error())
-        return
-    }
-    return string(shell)
-
+	return os.Getenv("SHELL")
 }
 func getResolution() {
+
 }
 func getWM() {
 }
@@ -68,48 +71,64 @@ func getTerminal() {
 }
 func getCPU() {
 }
-func getGPU() {
+func getGPU() string {
+	cmd := exec.Command("lspci", "-v")
+	shell, err := cmd.Output()
+	_ = err
+	var bruh string
+	//return strings.Replace(string(shell), "\n", "", -1)
+	//return string(shell)
+	for _, line := range strings.Split(strings.TrimSuffix(string(shell), "\n"), "\n") {
+		if strings.Contains(line, "VGA") {
+			bruh += line[strings.Index(line, ": ")+2 : strings.Index(line, " (")]
+		}
+	}
+	return bruh
 }
-func getMemory() {
-      
-      //
-      // The coolest part about this function unlike neofetch is that it also takes account of the basic os operations
-      // into account thus not giving an illusion that your os is completely having fun
-      // honestly idk lmao
-      //
-      
-      mem, err := os.Open("/proc/meminfo")
-      if err != nil {
-          fmt.Println(err.Error())
-          os.Exit(0)
-      }
-      mem_info := make([]byte, 1024)
-      mem.Read(mem_info)
-      mem.Close()
-      mem_list := strings.Split(string(mem_info),"\n");
-      mem_map := make(map[string]string)
-      for _,v := range mem_list {
-          if strings.Contains(v,":") {
-              kv := strings.Split(v,":")
-              kv[0] = strings.TrimSpace(kv[0])
-              kv[1] = strings.TrimSpace(kv[1])
-              kv[1] = strings.Replace(kv[1],"kB","",3)
-              kv[1] = strings.TrimSpace(kv[1])
-              mem_map[kv[0]] = kv[1]
-          }
-      }
-      mem_free,_ :=  strconv.Atoi(mem_map["MemFree"])
-      mem_total,_ := strconv.Atoi(mem_map["MemTotal"])
-      mem_used := mem_total-mem_free                                                                                                                                                                          
-      memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)      
-      return memory 
+func getMemory() string {
+
+	//
+	// The coolest part about this function unlike neofetch is that it also takes account of the basic os operations
+	// into account thus not giving an illusion that your os is completely having fun
+	// honestly idk lmao
+	//
+
+	mem, err := os.Open("/proc/meminfo")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	mem_info := make([]byte, 1024)
+	mem.Read(mem_info)
+	mem.Close()
+	mem_list := strings.Split(string(mem_info), "\n")
+	mem_map := make(map[string]string)
+	for _, v := range mem_list {
+		if strings.Contains(v, ":") {
+			kv := strings.Split(v, ":")
+			kv[0] = strings.TrimSpace(kv[0])
+			kv[1] = strings.TrimSpace(kv[1])
+			kv[1] = strings.Replace(kv[1], "kB", "", 3)
+			kv[1] = strings.TrimSpace(kv[1])
+			mem_map[kv[0]] = kv[1]
+		}
+	}
+	mem_free, _ := strconv.Atoi(mem_map["MemFree"])
+	mem_total, _ := strconv.Atoi(mem_map["MemTotal"])
+	mem_used := mem_total - mem_free
+	memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)
+	return (memory)
 }
 
 func getColorPalette() {
 }
 
-
 func main() {
-
-
+	/*just for testing, dont use these lmao im gonna make an config file
+	    fmt.Println(getHostname(), "@", getUsername())
+		fmt.Println(getDistro())
+		fmt.Println(getGPU())
+		fmt.Println(getMemory())
+		fmt.Println(getKernel())
+	*/
 }
