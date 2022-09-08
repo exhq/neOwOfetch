@@ -8,6 +8,21 @@ import (
 	"strings"
 )
 
+var isuwuified bool = true
+
+func handleArgs() {
+	if len(os.Args) == 1 {
+		return
+	} else if len(os.Args) > 1 {
+		args := os.Args
+		for _, arg := range args {
+			if arg == "nouwu" {
+				isuwuified = false
+			}
+		}
+	}
+
+}
 func getHostname() string {
 	cmd := exec.Command("uname", "-n")
 	shell, _ := cmd.Output()
@@ -52,13 +67,9 @@ func getKernel() string {
 }
 func getUptime() string {
 	cmd := exec.Command("cat", "/proc/uptime")
-	uptime, err := cmd.Output()
-	if err != nil {
-		fmt.Println(err.Error())
-		return "fuck you"
-	}
+	uptime, _ := cmd.Output()
 	intup, _ := strconv.Atoi(string(uptime[:strings.Count(string(uptime), ".")+3]))
-	return literallyBasicMath(intup)
+	return formatTime(intup)
 }
 func getPackages() {
 }
@@ -80,7 +91,7 @@ func getTerminal() string {
 	return ("exists=" + strconv.FormatBool(exists) + "existprgm=" + strconv.FormatBool(existprgm))
 }
 func getCPU() {
-	mem, err := os.Open("/proc/meminfo")
+	mem, err := os.Open("/proc/cpuinfo")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(0)
@@ -145,7 +156,7 @@ func getMemory(used bool) string {
 	}
 }
 
-func literallyBasicMath(seconds int) string {
+func formatTime(seconds int) string {
 	minutes := seconds / 60
 	secondsre := strconv.Itoa(seconds % 60)
 	hour := strconv.Itoa(minutes / 60)
@@ -157,13 +168,21 @@ func getColorPalette() {
 }
 
 func main() {
-	fmt.Print(getUptime(), "\n")
-	//fmt.Print(getTerminal(), "\n")
-	fmt.Print(getShell(), "\n")
-	fmt.Print(getHostname(), "@", getUsername(), "\n")
-	fmt.Print(getDistro(), "\n")
-	fmt.Print(getGPU(), "\n")
-	fmt.Print(getMemory(true), "\n")
-	fmt.Print(getKernel(), "\n")
-	fmt.Print(13/2, 13%2, "\n")
+	/*
+
+		fmt.Print(getUptime(), "\n")
+		fmt.Print(getTerminal(), "\n")
+		fmt.Print(getShell(), "\n")
+		fmt.Print(getHostname(), "@", getUsername(), "\n")
+		fmt.Print(getDistro(), "\n")
+		fmt.Print(getGPU(), "\n")
+		fmt.Print(getMemory(true), "\n")
+		fmt.Print(getKernel(), "\n")
+	*/
+	handleArgs()
+	if isuwuified {
+		fmt.Print("shit will be uwuified\n")
+	} else {
+		fmt.Print("shit will be NOT uwuified\n")
+	}
 }
