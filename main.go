@@ -50,8 +50,15 @@ func getKernel() string {
 	}
 	return string(kernel)
 }
-func getUptime() {
-
+func getUptime() string {
+	cmd := exec.Command("cat", "/proc/uptime")
+	uptime, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err.Error())
+		return "fuck you"
+	}
+	intup, _ := strconv.Atoi(string(uptime[:strings.Count(string(uptime), ".")+3]))
+	return literallyBasicMath(intup)
 }
 func getPackages() {
 }
@@ -138,16 +145,25 @@ func getMemory(used bool) string {
 	}
 }
 
+func literallyBasicMath(seconds int) string {
+	minutes := seconds / 60
+	secondsre := strconv.Itoa(seconds % 60)
+	hour := strconv.Itoa(minutes / 60)
+	minutesre := strconv.Itoa(minutes % 60)
+	return (hour + "h " + minutesre + "m " + secondsre + "s")
+}
+
 func getColorPalette() {
 }
 
 func main() {
-	fmt.Print(getTerminal(), "\n")
+	fmt.Print(getUptime(), "\n")
+	//fmt.Print(getTerminal(), "\n")
 	fmt.Print(getShell(), "\n")
 	fmt.Print(getHostname(), "@", getUsername(), "\n")
 	fmt.Print(getDistro(), "\n")
 	fmt.Print(getGPU(), "\n")
 	fmt.Print(getMemory(true), "\n")
 	fmt.Print(getKernel(), "\n")
-
+	fmt.Print(13/2, 13%2, "\n")
 }
