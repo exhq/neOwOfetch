@@ -67,9 +67,23 @@ func getTheme() {
 }
 func getIcons() {
 }
-func getTerminal() {
+func getTerminal() string {
+	_, exists := os.LookupEnv("TERM")
+	_, existprgm := os.LookupEnv("TERM_PROGRAM")
+	return ("exists=" + strconv.FormatBool(exists) + "existprgm=" + strconv.FormatBool(existprgm))
 }
 func getCPU() {
+	mem, err := os.Open("/proc/meminfo")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+	mem_info := make([]byte, 1024)
+	mem.Read(mem_info)
+	mem.Close()
+	mem_list := strings.Split(string(mem_info), "\n")
+	mem_map := make(map[string]string)
+	_, _ = mem_list, mem_map
 }
 func getGPU() string {
 	cmd := exec.Command("lspci", "-v")
@@ -85,7 +99,7 @@ func getGPU() string {
 	}
 	return bruh
 }
-func getMemory() string {
+func getMemory(used bool) string {
 
 	//
 	// The coolest part about this function unlike neofetch is that it also takes account of the basic os operations
@@ -116,19 +130,24 @@ func getMemory() string {
 	mem_free, _ := strconv.Atoi(mem_map["MemFree"])
 	mem_total, _ := strconv.Atoi(mem_map["MemTotal"])
 	mem_used := mem_total - mem_free
-	memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)
-	return (memory)
+	//memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)
+	if used {
+		return strconv.Itoa(mem_used / 1024)
+	} else {
+		return strconv.Itoa(mem_total / 1024)
+	}
 }
 
 func getColorPalette() {
 }
 
 func main() {
-	/*just for testing, dont use these lmao im gonna make an config file
-	    fmt.Println(getHostname(), "@", getUsername())
-		fmt.Println(getDistro())
-		fmt.Println(getGPU())
-		fmt.Println(getMemory())
-		fmt.Println(getKernel())
-	*/
+	fmt.Print(getTerminal(), "\n")
+	fmt.Print(getShell(), "\n")
+	fmt.Print(getHostname(), "@", getUsername(), "\n")
+	fmt.Print(getDistro(), "\n")
+	fmt.Print(getGPU(), "\n")
+	fmt.Print(getMemory(true), "\n")
+	fmt.Print(getKernel(), "\n")
+
 }
