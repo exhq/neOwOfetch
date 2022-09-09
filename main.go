@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
@@ -12,11 +13,57 @@ import (
 var isuwuified bool = true
 var tempbool bool
 
-func cprint(input string, newline bool) {
-	if newline == false {
-		fmt.Print(input)
+func cprint(input string, newline bool, uwuoverwrite bool) {
+	endings := [15]string{
+		"owo",
+		"UwU",
+		">w<",
+		"^w^",
+		"●w●",
+		"☆w☆",
+		"𝗨𝘄𝗨",
+		"(´꒳`)",
+		"♥(。U ω U。)",
+		"(˘ε˘)",
+		"( ˘ᴗ˘ )",
+		"(*ฅ́˘ฅ̀*)",
+		"*screams*",
+		"*twearks*",
+		"*sweats*",
+	}
+	ninput := ""
+	if isuwuified && !uwuoverwrite {
+		bruh := strings.Split(input, " ")
+		for _, word := range bruh {
+			if word == "" {
+				continue
+			}
+			word = strings.ReplaceAll(word, "r", "w")
+			word = strings.ReplaceAll(word, "i", "iy")
+			word = strings.ReplaceAll(word, "l", "w")
+			if strings.HasSuffix(word, "!") {
+				word = word[0:len(word)-1] + "1!11!1"
+			}
+			if strings.Contains(word, "u") && !strings.Contains(word, "uwu") && !strings.Contains(word, "owo") {
+				word = strings.ReplaceAll(word, "u", "uwu")
+			}
+
+			ninput += word + " "
+
+		}
+		if rand.Intn(5-1)+1 == 2 {
+			ninput += endings[rand.Intn(len(endings))]
+
+		}
+
 	} else {
-		fmt.Print(input + "\n")
+		ninput = input
+	}
+
+	if newline == false {
+		fmt.Print(ninput)
+	} else {
+		fmt.Print(ninput + "\n")
 	}
 }
 
@@ -45,10 +92,10 @@ among`)
 			declr := w[0]
 			inf := w[1]
 			if declr == "nn-prin" {
-				cprint(strings.Join(w[1:], " "), false)
+				cprint(strings.Join(w[1:], " "), false, false)
 			}
 			if declr == "prin" {
-				cprint(strings.Join(w[1:], " "), true)
+				cprint(strings.Join(w[1:], " "), true, false)
 			}
 			if declr == "nn-info" || declr == "info" {
 				if declr == "info" {
@@ -57,9 +104,12 @@ among`)
 					tempbool = false
 				}
 				if inf == "username" {
-					cprint(getUsername(), tempbool)
+					cprint(getUsername(), tempbool, false)
 				} else if inf == "hostname" {
-					cprint(getHostname(), tempbool)
+					cprint(getHostname(), tempbool, false)
+				} else if inf == "uptime" {
+					among, _ := strconv.Atoi(getUptime())
+					cprint(formatTime(among), tempbool, true)
 				}
 			}
 		}
@@ -123,10 +173,9 @@ func getKernel() string {
 	return string(kernel)
 }
 func getUptime() string {
-	cmd := exec.Command("cat", "/proc/uptime")
-	uptime, _ := cmd.Output()
-	intup, _ := strconv.Atoi(string(uptime[:strings.Count(string(uptime), ".")+3]))
-	return formatTime(intup)
+	content, _ := os.ReadFile("/proc/uptime")
+	return (string(content[0:strings.Index(string(content), ".")]))
+
 }
 func getPackages() {
 }
@@ -227,6 +276,7 @@ func getColorPalette() {
 func main() {
 	handleArgs()
 	handleConfig()
+
 	//if isuwuified {
 	//	fmt.Print("\n shit will be uwuified\n")
 	//} else {
