@@ -1,7 +1,7 @@
-{MAGENTA}        /\
-       {RED}/{MAGENTA}/ \{BLUE}\
-      {RED}/{MAGENTA}/>ω<\{BLUE}\
-     {RED}/{MAGENTA}/     \ {BLUE}\
-   {RED}/ {MAGENTA}/      _) {BLUE})
-  {RED}/_{MAGENTA}/___-- {BLUE}___-
+        /\
+       // \\
+      //>ω<\\
+     //     \ \
+   / /      _) )
+  /_/___-- ___-
    /____---
