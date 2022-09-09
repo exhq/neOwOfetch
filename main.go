@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/exhq/neowofetch/util"
 )
 
 var isuwuified bool = true
-var tempbool bool
 var arch = `       /\      
        /  \    
       /\   \    
@@ -22,119 +22,67 @@ var arch = `       /\
   /_-''    ''-_\
 `
 
-func cprint(input string, newline bool, uwuoverwrite bool) {
+func getHome() string {
+	return os.Getenv("HOME")
+}
 
-	endings := [15]string{
-		"owo",
-		"UwU",
-		">w<",
-		"^w^",
-		"●w●",
-		"☆w☆",
-		"𝗨𝘄𝗨",
-		"(´꒳`)",
-		"♥(。U ω U。)",
-		"(˘ε˘)",
-		"( ˘ᴗ˘ )",
-		"(*ฅ́˘ฅ̀*)",
-		"*screams*",
-		"*twearks*",
-		"*sweats*",
-	}
-	ninput := ""
-	if isuwuified && !uwuoverwrite {
-		bruh := strings.Split(input, " ")
-		for _, word := range bruh {
-			if word == "" {
-				continue
-			}
-			word = strings.ReplaceAll(word, "r", "w")
-			word = strings.ReplaceAll(word, "i", "iy")
-			word = strings.ReplaceAll(word, "l", "w")
-
-			if strings.HasSuffix(word, "!") {
-				word = word[0:len(word)-1] + "1!11!1"
-			}
-			if strings.Contains(word, "u") && !strings.Contains(word, "uwu") && !strings.Contains(word, "owo") {
-				word = strings.ReplaceAll(word, "u", "uwu")
-			}
-
-			ninput += word + " "
-
-		}
-		if rand.Intn(5-1)+1 == 2 {
-			ninput += endings[rand.Intn(len(endings))]
-
-		}
-
-	} else {
-		ninput = input
-	}
-	farch := strings.Split(arch, "\n")
-	check := 0
-	if newline == false {
-		fmt.Print(ninput)
-	} else {
-		fmt.Print(farch[0] + ninput + "\n")
-		check += 1
-	}
-	if check < len(farch) {
-		for check < len(farch) {
-			print(farch[check] + "\n")
-			check += 1
-		}
-	}
+func getConfigFile() string {
+	return getHome() + "/.config/neowofetch/conf"
 }
 
 func handleConfig() {
-	_, folder := os.Stat("/home/" + getUsername() + "/.config/neowofetch")
-	_, file := os.Stat("/home/" + getUsername() + "/.config/neowofetch/conf")
+	_, folder := os.Stat(filepath.Dir(getConfigFile()))
+	_, file := os.Stat(getConfigFile())
 	if os.IsNotExist(folder) {
-		os.Mkdir("/home/"+getUsername()+"/.config/neowofetch", os.ModePerm)
+		os.Mkdir(filepath.Dir(getConfigFile()), os.ModePerm)
 	}
 
 	if os.IsNotExist(file) {
 		println("bruh you aint got tha file? bruh fr fr bruh wtf")
-		f, _ := os.Create("/home/" + getUsername() + "/.config/neowofetch/conf")
-		_, _ = f.WriteString(
-			`test
-among`)
-
+		f, _ := os.Create(getConfigFile())
+		_, _ = f.WriteString("test\namong")
 	} else {
-		body, _ := ioutil.ReadFile("/home/" + getUsername() + "/.config/neowofetch/conf")
+		body, _ := ioutil.ReadFile(getConfigFile())
 		fbody := strings.Split(string(body), "\n")
+		util.InitUwuPrinter()
 		for _, s := range fbody {
-			w := strings.Split(s, " ")
-			if len(w) == 1 {
+			w := strings.SplitN(s, " ", 2)
+			if len(w) < 2 {
 				continue
 			}
-			declr := w[0]
-			inf := w[1]
-			nouwu := w[len(w)-1]
-			if declr == "nn-prin" {
-				cprint(strings.Join(w[1:], " "), false, nouwu == "nouwu")
+			verb := w[0]
+			argument := w[1]
+			nouwu := false
+			if strings.HasPrefix(argument, "-uwu ") {
+				nouwu = true
+				argument = argument[5:]
 			}
-			if declr == "prin" {
-				cprint(strings.Join(w[1:], " "), true, nouwu == "nouwu")
-			}
-			if declr == "nn-info" || declr == "info" {
-				if declr == "info" {
-					tempbool = true
-				} else {
-					tempbool = false
-				}
-				if inf == "username" {
-					cprint(getUsername(), tempbool, nouwu == "nouwu")
-				} else if inf == "hostname" {
-					cprint(getHostname(), tempbool, nouwu == "nouwu")
-				} else if inf == "uptime" {
-					among, _ := strconv.Atoi(getUptime())
-					cprint(formatTime(among), tempbool, true)
-				}
+			if verb == "print" {
+				util.UwuPrint(argument, nouwu)
+			} else if verb == "println" {
+				util.UwuPrint(argument, nouwu)
+				util.UwuNewline()
+			} else if verb == "info" {
+				PrintInfo(argument, nouwu)
+			} else if verb == "infoln" {
+				PrintInfo(argument, nouwu)
+				util.UwuNewline()
+			} else {
+				fmt.Printf("Unknown verb %s\n", verb)
 			}
 		}
 	}
+}
 
+func PrintInfo(infoType string, noUwuOverride bool) {
+	if infoType == "username" {
+		util.UwuPrint(getUsername(), noUwuOverride)
+	} else if infoType == "hostname" {
+		util.UwuPrint(getHostname(), noUwuOverride)
+	} else if infoType == "uptime" {
+		among, _ := strconv.Atoi(getUptime())
+		util.UwuPrint(formatTime(among), true)
+	}
 }
 
 func handleArgs() {
@@ -297,21 +245,5 @@ func getColorPalette() {
 func main() {
 	handleArgs()
 	handleConfig()
-	ex, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-	exPath := filepath.Dir(ex)
-	fmt.Println(exPath)
-
-	/*
-		mem, err := os.Open("/proc/meminfo")
-		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(0)
-		}
-		mem_info := make([]byte, 1024)
-		mem.Read(mem_info)
-		mem.Close()
-	*/
+	util.UwuPrintRest()
 }

@@ -1,0 +1,5 @@
+package subdirectory;
+
+
+func TestFun() {
+}
