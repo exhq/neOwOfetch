@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -9,6 +10,62 @@ import (
 )
 
 var isuwuified bool = true
+var tempbool bool
+
+func cprint(input string, newline bool) {
+	if newline == false {
+		fmt.Print(input)
+	} else {
+		fmt.Print(input + "\n")
+	}
+}
+
+func handleConfig() {
+	_, folder := os.Stat("/home/" + getUsername() + "/.config/neowofetch")
+	_, file := os.Stat("/home/" + getUsername() + "/.config/neowofetch/conf")
+	if os.IsNotExist(folder) {
+		os.Mkdir("/home/"+getUsername()+"/.config/neowofetch", os.ModePerm)
+	}
+
+	if os.IsNotExist(file) {
+		println("bruh you aint got tha file? bruh fr fr bruh wtf")
+		f, _ := os.Create("/home/" + getUsername() + "/.config/neowofetch/conf")
+		_, _ = f.WriteString(
+			`test
+among`)
+
+	} else {
+		body, _ := ioutil.ReadFile("/home/" + getUsername() + "/.config/neowofetch/conf")
+		fbody := strings.Split(string(body), "\n")
+		for _, s := range fbody {
+			w := strings.Split(s, " ")
+			if len(w) == 1 {
+				continue
+			}
+			declr := w[0]
+			inf := w[1]
+			if declr == "nn-prin" {
+				cprint(strings.Join(w[1:], " "), false)
+			}
+			if declr == "prin" {
+				cprint(strings.Join(w[1:], " "), true)
+			}
+			if declr == "nn-info" || declr == "info" {
+				if declr == "info" {
+					tempbool = true
+				} else {
+					tempbool = false
+				}
+				if inf == "username" {
+					cprint(getUsername(), tempbool)
+				} else if inf == "hostname" {
+					cprint(getHostname(), tempbool)
+				}
+			}
+		}
+	}
+
+}
 
 func handleArgs() {
 	if len(os.Args) == 1 {
@@ -168,21 +225,11 @@ func getColorPalette() {
 }
 
 func main() {
-	/*
-
-		fmt.Print(getUptime(), "\n")
-		fmt.Print(getTerminal(), "\n")
-		fmt.Print(getShell(), "\n")
-		fmt.Print(getHostname(), "@", getUsername(), "\n")
-		fmt.Print(getDistro(), "\n")
-		fmt.Print(getGPU(), "\n")
-		fmt.Print(getMemory(true), "\n")
-		fmt.Print(getKernel(), "\n")
-	*/
 	handleArgs()
-	if isuwuified {
-		fmt.Print("shit will be uwuified\n")
-	} else {
-		fmt.Print("shit will be NOT uwuified\n")
-	}
+	handleConfig()
+	//if isuwuified {
+	//	fmt.Print("\n shit will be uwuified\n")
+	//} else {
+	//	fmt.Print("shit will be NOT uwuified\n")
+	//}
 }
