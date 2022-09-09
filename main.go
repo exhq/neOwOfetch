@@ -6,14 +6,24 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 var isuwuified bool = true
 var tempbool bool
+var arch = `       /\      
+       /  \    
+      /\   \    
+     / > ω <\   
+    /   __   \  
+   / __|  |__-\ 
+  /_-''    ''-_\
+`
 
 func cprint(input string, newline bool, uwuoverwrite bool) {
+
 	endings := [15]string{
 		"owo",
 		"UwU",
@@ -41,6 +51,7 @@ func cprint(input string, newline bool, uwuoverwrite bool) {
 			word = strings.ReplaceAll(word, "r", "w")
 			word = strings.ReplaceAll(word, "i", "iy")
 			word = strings.ReplaceAll(word, "l", "w")
+
 			if strings.HasSuffix(word, "!") {
 				word = word[0:len(word)-1] + "1!11!1"
 			}
@@ -59,11 +70,19 @@ func cprint(input string, newline bool, uwuoverwrite bool) {
 	} else {
 		ninput = input
 	}
-
+	farch := strings.Split(arch, "\n")
+	check := 0
 	if newline == false {
 		fmt.Print(ninput)
 	} else {
-		fmt.Print(ninput + "\n")
+		fmt.Print(farch[0] + ninput + "\n")
+		check += 1
+	}
+	if check < len(farch) {
+		for check < len(farch) {
+			print(farch[check] + "\n")
+			check += 1
+		}
 	}
 }
 
@@ -91,11 +110,12 @@ among`)
 			}
 			declr := w[0]
 			inf := w[1]
+			nouwu := w[len(w)-1]
 			if declr == "nn-prin" {
-				cprint(strings.Join(w[1:], " "), false, false)
+				cprint(strings.Join(w[1:], " "), false, nouwu == "nouwu")
 			}
 			if declr == "prin" {
-				cprint(strings.Join(w[1:], " "), true, false)
+				cprint(strings.Join(w[1:], " "), true, nouwu == "nouwu")
 			}
 			if declr == "nn-info" || declr == "info" {
 				if declr == "info" {
@@ -104,9 +124,9 @@ among`)
 					tempbool = false
 				}
 				if inf == "username" {
-					cprint(getUsername(), tempbool, false)
+					cprint(getUsername(), tempbool, nouwu == "nouwu")
 				} else if inf == "hostname" {
-					cprint(getHostname(), tempbool, false)
+					cprint(getHostname(), tempbool, nouwu == "nouwu")
 				} else if inf == "uptime" {
 					among, _ := strconv.Atoi(getUptime())
 					cprint(formatTime(among), tempbool, true)
@@ -141,6 +161,7 @@ func getUsername() string {
 	return strings.Replace(string(shell), "\n", "", -1)
 }
 func getLogo() {
+
 }
 func getDistro() string {
 	distro, err := os.Open("/etc/os-release")
@@ -276,10 +297,21 @@ func getColorPalette() {
 func main() {
 	handleArgs()
 	handleConfig()
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
+	fmt.Println(exPath)
 
-	//if isuwuified {
-	//	fmt.Print("\n shit will be uwuified\n")
-	//} else {
-	//	fmt.Print("shit will be NOT uwuified\n")
-	//}
+	/*
+		mem, err := os.Open("/proc/meminfo")
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(0)
+		}
+		mem_info := make([]byte, 1024)
+		mem.Read(mem_info)
+		mem.Close()
+	*/
 }
