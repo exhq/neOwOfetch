@@ -56,25 +56,26 @@ func initLine() {
 			logoLine := logoLines[logoIndex]
 			logoLineLength := len([]rune(logoLine))
 			padding := strings.Repeat(" ", logoWidth-logoLineLength)
-			fmt.Printf("%s%s", logoLine, padding)
+			print(logoLine, padding)
 			logoIndex += 1
 		} else {
-			fmt.Printf("%s", strings.Repeat(" ", logoWidth))
+			print(strings.Repeat(" ", logoWidth))
 		}
 	}
 }
 
 func UwuPrint(message string, noUwuOverride bool) {
+	//will add color eventually, my brain hurts
 	initLine()
 	if noUwuOverride || !shouldUwuify {
-		fmt.Printf("%s", message)
+		print(message)
 		return
 	}
 	words := strings.Split(message, " ")
 	hadAnyContent := false
 	for _, word := range words {
 		if word == "" {
-			fmt.Print(" ")
+			print(" ")
 			continue
 		}
 		word = strings.ReplaceAll(word, "r", "w")
@@ -92,11 +93,11 @@ func UwuPrint(message string, noUwuOverride bool) {
 			word = strings.ReplaceAll(word, "u", "uwu")
 		}
 		hadAnyContent = true
-		fmt.Printf("%s ", word)
+		print(word)
 	}
 
 	if hadAnyContent && rand.Intn(5) == 0 {
-		fmt.Printf("%s", uwuEmotes[rand.Intn(len(uwuEmotes))])
+		print(uwuEmotes[rand.Intn(len(uwuEmotes))])
 	}
 }
 
