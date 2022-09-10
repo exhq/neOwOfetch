@@ -38,9 +38,9 @@ func handleConfig() {
 	}
 
 	if os.IsNotExist(file) {
-		println("bruh you aint got tha file? bruh fr fr bruh wtf")
+		println("config was not found. a default config file has been generated in '~/.config/neowofetch/conf'")
 		f, _ := os.Create(getConfigFile())
-		_, _ = f.WriteString("test\namong")
+		_, _ = f.WriteString("println neOwOfetch 🔥\ninfo username\nprint @\ninfoln distro\nprint uptime:   \ninfo uptime")
 	} else {
 		body, _ := ioutil.ReadFile(getConfigFile())
 		fbody := strings.Split(string(body), "\n")
@@ -82,6 +82,8 @@ func PrintInfo(infoType string, noUwuOverride bool) {
 	} else if infoType == "uptime" {
 		among, _ := strconv.Atoi(getUptime())
 		util.UwuPrint(formatTime(among), true)
+	} else if infoType == "distro" {
+		util.UwuPrint(getDistro(), noUwuOverride)
 	}
 }
 
