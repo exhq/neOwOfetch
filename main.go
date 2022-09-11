@@ -45,8 +45,9 @@ func handleConfig() {
 		body, _ := ioutil.ReadFile(getConfigFile())
 		fbody := strings.Split(string(body), "\n")
 		util.InitUwuPrinter()
-		for _, s := range fbody {
+		for i, s := range fbody {
 			w := strings.SplitN(s, " ", 2)
+
 			if len(w) < 2 {
 				continue
 			}
@@ -58,14 +59,14 @@ func handleConfig() {
 				argument = argument[5:]
 			}
 			if verb == "print" {
-				util.UwuPrint(argument, nouwu)
+				util.UwuPrint(argument, nouwu, fbody[i])
 			} else if verb == "println" {
-				util.UwuPrint(argument, nouwu)
+				util.UwuPrint(argument, nouwu, fbody[i])
 				util.UwuNewline()
 			} else if verb == "info" {
-				PrintInfo(argument, nouwu)
+				PrintInfo(argument, nouwu, strings.Join(fbody, ""))
 			} else if verb == "infoln" {
-				PrintInfo(argument, nouwu)
+				PrintInfo(argument, nouwu, strings.Join(fbody, ""))
 				util.UwuNewline()
 			} else {
 				fmt.Printf("Unknown verb %s\n", verb)
@@ -74,17 +75,20 @@ func handleConfig() {
 	}
 }
 
-func PrintInfo(infoType string, noUwuOverride bool) {
+func PrintInfo(infoType string, noUwuOverride bool, whole string) {
 	if infoType == "username" {
-		util.UwuPrint(getUsername(), noUwuOverride)
+		util.UwuPrint(getUsername(), noUwuOverride, whole)
 	} else if infoType == "hostname" {
-		util.UwuPrint(getHostname(), noUwuOverride)
+		util.UwuPrint(getHostname(), noUwuOverride, whole)
 	} else if infoType == "uptime" {
 		among, _ := strconv.Atoi(getUptime())
-		util.UwuPrint(formatTime(among), true)
+		util.UwuPrint(formatTime(among), true, whole)
 	} else if infoType == "distro" {
-		util.UwuPrint(getDistro(), noUwuOverride)
+		util.UwuPrint(getDistro(), noUwuOverride, whole)
+	} else if infoType == "terminal" {
+		util.UwuPrint(getTerminal(), noUwuOverride, whole)
 	}
+
 }
 
 func handleArgs() {
