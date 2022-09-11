@@ -64,41 +64,60 @@ func initLine() {
 	}
 }
 
-func UwuPrint(message string, noUwuOverride bool) {
+func UwuPrint(message string, noUwuOverride bool, whole string) {
 	//will add color eventually, my brain hurts
+	var hadAnyContent bool
+	var wholeword string
+	var checkspaces int
+	isuwu := true
 	initLine()
 	if noUwuOverride || !shouldUwuify {
-		print(message)
-		return
+		isuwu = false
+		wholeword = message
 	}
-	words := strings.Split(message, " ")
-	hadAnyContent := false
-	for _, word := range words {
-		if word == "" {
-			print(" ")
-			continue
-		}
-		word = strings.ReplaceAll(word, "r", "w")
-		word = strings.ReplaceAll(word, "i", "iy")
-		word = strings.ReplaceAll(word, "iyy", "iy")
-		word = strings.ReplaceAll(word, "l", "w")
+	notuwuified := ""
+	if isuwu {
+		words := strings.Split(message, " ")
+		hadAnyContent = false
+		for _, word := range words {
+			notuwuified += word
+			if word == "" {
+				checkspaces += 1
+				continue
+			}
+			word = strings.ReplaceAll(word, "r", "w")
+			word = strings.ReplaceAll(word, "i", "iy")
+			word = strings.ReplaceAll(word, "iyy", "iy")
+			word = strings.ReplaceAll(word, "l", "w")
 
-		if strings.HasSuffix(word, "!") {
-			word = word[:len(word)-1] + "1!11!1"
-		}
+			if strings.HasSuffix(word, "!") {
+				word = word[:len(word)-1] + "1!11!1"
+			}
 
-		if strings.Contains(word, "u") &&
-			!strings.Contains(word, "uwu") &&
-			!strings.Contains(word, "owo") {
-			word = strings.ReplaceAll(word, "u", "uwu")
+			if strings.Contains(word, "u") &&
+				!strings.Contains(word, "uwu") &&
+				!strings.Contains(word, "owo") {
+				word = strings.ReplaceAll(word, "u", "uwu")
+			}
+			hadAnyContent = true
+			wholeword += word
 		}
-		hadAnyContent = true
-		print(word)
 	}
 
 	if hadAnyContent && rand.Intn(5) == 0 {
 		print(uwuEmotes[rand.Intn(len(uwuEmotes))])
 	}
+	wholeword = wholeword + strings.Repeat(" ", checkspaces)
+
+	if strings.Contains(notuwuified, "blue") {
+		handlecolor(wholeword)
+	} else {
+		print(wholeword)
+	}
+}
+
+func handlecolor(wholeword string) {
+	print(wholeword + "bruh")
 }
 
 func UwuNewline() {
