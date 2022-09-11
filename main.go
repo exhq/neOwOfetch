@@ -64,9 +64,9 @@ func handleConfig() {
 				util.UwuPrint(argument, nouwu, fbody[i])
 				util.UwuNewline()
 			} else if verb == "info" {
-				PrintInfo(argument, nouwu, strings.Join(fbody, ""))
+				PrintInfo(argument, nouwu, fbody[i])
 			} else if verb == "infoln" {
-				PrintInfo(argument, nouwu, strings.Join(fbody, ""))
+				PrintInfo(argument, nouwu, fbody[i])
 				util.UwuNewline()
 			} else {
 				fmt.Printf("Unknown verb %s\n", verb)
