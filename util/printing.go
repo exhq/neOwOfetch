@@ -3,7 +3,9 @@ package util
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"strings"
+	//"github.com/fatih/color"
 )
 
 var uwuEmotes = [15]string{
@@ -20,7 +22,7 @@ var uwuEmotes = [15]string{
 	"( ˘ᴗ˘ )",
 	"(*ฅ́˘ฅ̀*)",
 	"*screams*",
-	"*twearks*",
+	"*twerks*",
 	"*sweats*",
 }
 
@@ -71,7 +73,7 @@ func UwuPrint(message string, noUwuOverride bool, whole string) {
 	var checkspaces int
 	isuwu := true
 	initLine()
-	if noUwuOverride || !shouldUwuify {
+	if noUwuOverride || !shouldUwuify || (len(os.Args) > 1 && os.Args[1] == "nouwu") {
 		isuwu = false
 		wholeword = message
 	}
@@ -105,19 +107,15 @@ func UwuPrint(message string, noUwuOverride bool, whole string) {
 	}
 
 	if hadAnyContent && rand.Intn(5) == 0 {
-		print(uwuEmotes[rand.Intn(len(uwuEmotes))])
+		print(uwuEmotes[rand.Intn(len(uwuEmotes))] + " ")
 	}
 	wholeword = wholeword + strings.Repeat(" ", checkspaces)
 
-	if strings.Contains(notuwuified, "blue") {
-		handlecolor(wholeword)
-	} else {
-		print(wholeword)
-	}
+	handlecolor(wholeword)
 }
 
 func handlecolor(wholeword string) {
-	print(wholeword + "bruh")
+	print(wholeword)
 }
 
 func UwuNewline() {
