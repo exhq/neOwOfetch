@@ -9,25 +9,43 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/exhq/neowofetch/util"
+	"github.com/fatih/color"
 )
 
 var isuwuified bool = true
-var arch = `       /\      
-       /  \    
-      /\   \    
-     / > ω <\   
-    /   __   \  
-   / __|  |__-\ 
-  /_-''    ''-_\
+var arch = `        /\        
+       /  \       
+      /\   \      
+     / > ω <\     
+    /   __   \    
+   / __|  |__-\   
+  /_-''    ''-_\  
 `
+
+var linearch []string
+var aa int
+
+func inituwu() {
+	print("bruh")
+}
 
 func getHome() string {
 	return os.Getenv("HOME")
+
+}
+func incrementaa() {
+	aa += 1
 }
 
 func getConfigFile() string {
 	return getHome() + "/.config/neowofetch/conf"
+}
+
+func initascii() {
+	linearch = strings.Split(arch, "\n")
+	aa = 0
+	print(linearch[aa])
+	aa = aa + 1
 }
 
 func handleConfig() {
@@ -43,52 +61,123 @@ func handleConfig() {
 		_, _ = f.WriteString("println neOwOfetch 🔥\ninfo username\nprint @\ninfoln distro\nprint uptime:   \ninfo uptime")
 	} else {
 		body, _ := ioutil.ReadFile(getConfigFile())
-		fbody := strings.Split(string(body), "\n")
-		util.InitUwuPrinter()
-		for i, s := range fbody {
-			w := strings.SplitN(s, " ", 2)
-
-			if len(w) < 2 {
+		sbody := (string(body))
+		fbody := strings.Split(sbody, "\n")
+		for _, line := range fbody {
+			word := strings.Split(line, " ")
+			if len(word) < 3 {
 				continue
 			}
-			verb := w[0]
-			argument := w[1]
-			nouwu := false
-			if strings.HasPrefix(argument, "-uwu ") {
-				nouwu = true
-				argument = argument[5:]
-			}
-			if verb == "print" {
-				util.UwuPrint(argument, nouwu, fbody[i])
-			} else if verb == "println" {
-				util.UwuPrint(argument, nouwu, fbody[i])
-				util.UwuNewline()
-			} else if verb == "info" {
-				PrintInfo(argument, nouwu, fbody[i])
-			} else if verb == "infoln" {
-				PrintInfo(argument, nouwu, fbody[i])
-				util.UwuNewline()
-			} else {
-				fmt.Printf("Unknown verb %s\n", verb)
-			}
+			action := word[0]
+			color := word[1]
+			rest := strings.Join(word[2:], " ")
+			handlePrint(action, color, rest)
 		}
+
+	}
+
+}
+
+func handlePrint(action, colour string, rest string) {
+	if action == "print" {
+		Cprint(colour, rest, true)
+	} else if action == "println" {
+		Cprint(colour, rest, true)
+		print("\n")
+		if aa < len(linearch) {
+			print(linearch[aa])
+		}
+		if aa == len(linearch) || aa == len(linearch)-1 {
+			print(strings.Repeat(" ", 18))
+		}
+
+		if aa > len(linearch) {
+			print(strings.Repeat(" ", 18))
+		}
+		incrementaa()
+	} else if action == "info" || action == "infoln" {
+		switch rest {
+		case "distro":
+			Cprint(colour, getDistro(), true)
+		case "username":
+			Cprint(colour, getUsername(), true)
+		case "uptime":
+			no, _ := strconv.Atoi(getUptime())
+			Cprint(colour, formatTime(no), false)
+		case "hostname":
+			Cprint(colour, getHostname(), true)
+		}
+	}
+	if action == "infoln" {
+
+		print("\n")
+		if aa < len(linearch) {
+			print(linearch[aa])
+		} else {
+			print(strings.Repeat(" ", 18))
+		}
+		incrementaa()
 	}
 }
 
-func PrintInfo(infoType string, noUwuOverride bool, whole string) {
-	if infoType == "username" {
-		util.UwuPrint(getUsername(), noUwuOverride, whole)
-	} else if infoType == "hostname" {
-		util.UwuPrint(getHostname(), noUwuOverride, whole)
-	} else if infoType == "uptime" {
-		among, _ := strconv.Atoi(getUptime())
-		util.UwuPrint(formatTime(among), true, whole)
-	} else if infoType == "distro" {
-		util.UwuPrint(getDistro(), noUwuOverride, whole)
-	} else if infoType == "terminal" {
-		util.UwuPrint(getTerminal(), noUwuOverride, whole)
+func Cprint(colour string, message string, uwu bool) {
+	nouwu := len(os.Args) == 2 && os.Args[1] == "-nouwu"
+
+	if uwu && !nouwu {
+		message = uwuify(message)
+	}
+	yellow := color.New(color.FgYellow).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
+	green := color.New(color.FgGreen).SprintFunc()
+	magenta := color.New(color.FgMagenta).SprintFunc()
+	blue := color.New(color.FgBlue).SprintFunc()
+	black := color.New(color.FgBlack).SprintFunc()
+	switch colour {
+	case "yellow":
+		print(yellow(message))
+	case "white":
+		print(message)
+	case "magenta":
+		print(magenta(message))
+	case "red":
+		print(red(message))
+	case "blue":
+		print(blue(message))
+	case "black":
+		print(black(message))
+	case "green":
+		print(green(message))
+	}
+}
+
+func uwuify(message string) string {
+	var answer string
+	var sentence []string
+	var hasspace bool
+	if strings.Contains(message, " ") {
+		sentence = strings.Split(message, " ")
+		hasspace = true
+	} else {
+		sentence = strings.Split(message, " ")
+		hasspace = false
 	}
 
+	for _, word := range sentence {
+		if !strings.Contains(strings.ToLower(word), "uwu") {
+			word = strings.Replace(word, "u", "UwU", 1)
+
+			if strings.Contains(strings.ToLower(word), "owo") {
+				word = strings.Replace(word, "o", "OwO", 1)
+			}
+
+		}
+		if hasspace {
+			answer += word + " "
+		} else {
+			answer += word
+		}
+	}
+	return answer
 }
 
 func handleArgs() {
@@ -237,6 +326,16 @@ func getMemory(used bool) string {
 	}
 }
 
+func handleremainingascii() {
+	if aa < len(linearch) {
+		for i := 0; i < len(linearch)-aa; i++ {
+			print("\n", linearch[aa])
+			incrementaa()
+
+		}
+	}
+}
+
 func formatTime(seconds int) string {
 	minutes := seconds / 60
 	secondsre := strconv.Itoa(seconds % 60)
@@ -249,7 +348,9 @@ func getColorPalette() {
 }
 
 func main() {
+	initascii()
 	handleArgs()
 	handleConfig()
-	util.UwuPrintRest()
+	handleremainingascii()
+	print("\n")
 }
