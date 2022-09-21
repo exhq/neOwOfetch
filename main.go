@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"neowofetch/asciiart"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,15 +14,6 @@ import (
 )
 
 var isuwuified bool = true
-var arch = `        /\        
-       /  \       
-      /\   \      
-     / > ω <\     
-    /   __   \    
-   / __|  |__-\   
-  /_-''    ''-_\  
-`
-
 var linearch []string
 var aa int
 
@@ -42,7 +34,7 @@ func getConfigFile() string {
 }
 
 func initascii() {
-	linearch = strings.Split(arch, "\n")
+	linearch = asciiart.Getascii(getDistro())
 	aa = 0
 	print(linearch[aa])
 	aa = aa + 1
@@ -106,6 +98,10 @@ func handlePrint(action, colour string, rest string) {
 			Cprint(colour, formatTime(no), false)
 		case "hostname":
 			Cprint(colour, getHostname(), true)
+		case "GPU":
+			Cprint(colour, getGPU(), true)
+		case "shell":
+			Cprint(colour, getShell(), true)
 		}
 	}
 	if action == "infoln" {
@@ -164,10 +160,10 @@ func uwuify(message string) string {
 
 	for _, word := range sentence {
 		if !strings.Contains(strings.ToLower(word), "uwu") {
-			word = strings.Replace(word, "u", "UwU", 1)
+			word = strings.Replace(word, "u", "UwU", -1)
 
 			if strings.Contains(strings.ToLower(word), "owo") {
-				word = strings.Replace(word, "o", "OwO", 1)
+				word = strings.Replace(word, "o", "OwO", -1)
 			}
 
 		}

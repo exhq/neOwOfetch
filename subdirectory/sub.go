@@ -1,5 +1,0 @@
-package subdirectory;
-
-
-func TestFun() {
-}
