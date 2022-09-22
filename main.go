@@ -3,37 +3,24 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"neowofetch/utils"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
 
-	"github.com/fatih/color"
+	"github.com/exhq/neowofetch/utils"
 )
 
 var isuwuified bool = true
-var asciiart []string
-var aa int
 
 func getHome() string {
 	return os.Getenv("HOME")
 
 }
-func incrementaa() {
-	aa += 1
-}
 
 func getConfigFile() string {
 	return getHome() + "/.config/neowofetch/conf"
-}
-
-func initascii() {
-	asciiart = utils.Asciioverwrite(utils.Getascii(getDistro()))
-	aa = 0
-	print(asciiart[aa])
-	aa = aa + 1
 }
 
 func handleConfig() {
@@ -66,118 +53,40 @@ func handleConfig() {
 
 }
 
-func handlePrint(action, colour string, rest string) {
+func handlePrint(action, format string, rest string) {
 	if action == "print" {
-		Cprint(colour, rest, true)
+		utils.CutePrint(rest, format)
 	} else if action == "println" {
-		Cprint(colour, rest, true)
-		print("\n")
-		if aa < len(asciiart) {
-			print(asciiart[aa])
-		}
-		if aa == len(asciiart) || aa == len(asciiart)-1 {
-			print(strings.Repeat(" ", len(asciiart[1])))
-		}
-
-		if aa > len(asciiart) {
-			print(strings.Repeat(" ", len(asciiart[1])))
-		}
-		incrementaa()
+		utils.CutePrint(rest, format)
+		utils.CuteNewLine()
 	} else if action == "info" || action == "infoln" {
 		switch rest {
 		case "distro":
-			Cprint(colour, getDistro(), true)
+			utils.CutePrint(getDistro(), format)
 		case "username":
-			Cprint(colour, getUsername(), true)
+			utils.CutePrint(getUsername(), format)
 		case "uptime":
 			no, _ := strconv.Atoi(getUptime())
-			Cprint(colour, formatTime(no), false)
+			utils.CutePrint(formatTime(no), format)
 		case "hostname":
-			Cprint(colour, getHostname(), true)
+			utils.CutePrint(getHostname(), format)
 		case "GPU":
-			Cprint(colour, getGPU(), true)
+			utils.CutePrint(getGPU(), format)
 		case "shell":
-			Cprint(colour, getShell(), true)
+			utils.CutePrint(getShell(), format)
 		case "terminal":
-			Cprint(colour, getTerminal(), true)
+			utils.CutePrint(getTerminal(), format)
 		case "memoryAll":
-			Cprint(colour, getMemory(false), true)
+			utils.CutePrint(getMemory(false), format)
 		case "memoryUsed":
-			Cprint(colour, getMemory(true), true)
+			utils.CutePrint(getMemory(true), format)
 		default:
 			print("{UNKNOWN KEYWORD}")
 		}
-	}
-	if action == "infoln" {
-
-		print("\n")
-		if aa < len(asciiart) {
-			print(asciiart[aa])
-		} else {
-			print(strings.Repeat(" ", len(asciiart[1])))
-		}
-		incrementaa()
-	}
-}
-
-func Cprint(colour string, message string, uwu bool) {
-
-	if uwu && utils.Woulduwuify() {
-		message = uwuify(message)
-	}
-	yellow := color.New(color.FgYellow).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
-	green := color.New(color.FgGreen).SprintFunc()
-	magenta := color.New(color.FgMagenta).SprintFunc()
-	blue := color.New(color.FgBlue).SprintFunc()
-	black := color.New(color.FgBlack).SprintFunc()
-	switch colour {
-	case "yellow":
-		print(yellow(message))
-	case "white":
-		print(message)
-	case "magenta":
-		print(magenta(message))
-	case "red":
-		print(red(message))
-	case "blue":
-		print(blue(message))
-	case "black":
-		print(black(message))
-	case "green":
-		print(green(message))
-	}
-}
-
-func uwuify(message string) string {
-	var answer string
-	var sentence []string
-	var hasspace bool
-	if strings.Contains(message, " ") {
-		sentence = strings.Split(message, " ")
-		hasspace = true
-	} else {
-		sentence = strings.Split(message, " ")
-		hasspace = false
-	}
-
-	for _, word := range sentence {
-		if !strings.Contains(strings.ToLower(word), "uwu") {
-			word = strings.Replace(word, "u", "UwU", -1)
-
-			if strings.Contains(strings.ToLower(word), "owo") {
-				word = strings.Replace(word, "o", "OwO", -1)
-			}
-			word = strings.Replace(word, "r", "w", -1)
-
-		}
-		if hasspace {
-			answer += word + " "
-		} else {
-			answer += word
+		if action == "infoln" {
+			utils.CuteNewLine()
 		}
 	}
-	return answer
 }
 
 func getHostname() string {
@@ -190,9 +99,7 @@ func getUsername() string {
 	shell, _ := cmd.Output()
 	return strings.Replace(string(shell), "\n", "", -1)
 }
-func getLogo() {
 
-}
 func getDistro() string {
 	distro, err := os.Open("/etc/os-release")
 	if err != nil {
@@ -201,7 +108,7 @@ func getDistro() string {
 	}
 	distro_info := make([]byte, 1024)
 	distro.Read(distro_info)
-	distro.Close()
+	defer distro.Close()
 	distro_list := strings.Split(string(distro_info), "\n")
 	distro_tuples := make(map[string]string)
 	for _, v := range distro_list {
@@ -243,11 +150,11 @@ func getTheme() {
 func getIcons() {
 }
 func getTerminal() string {
-	_, existprgm := os.LookupEnv("TERM_PROGRAM")
+	a, existprgm := os.LookupEnv("TERM_PROGRAM")
 	if !existprgm {
 		return os.Getenv("TERM")
 	} else {
-		return os.Getenv("TERM_PROGRAM")
+		return a
 	}
 
 }
@@ -313,16 +220,6 @@ func getMemory(used bool) string {
 	}
 }
 
-func handleremainingascii() {
-	if aa < len(asciiart) {
-		for i := 0; i < len(asciiart)-aa; i++ {
-			print("\n", asciiart[aa])
-			incrementaa()
-
-		}
-	}
-}
-
 func formatTime(seconds int) string {
 	minutes := seconds / 60
 	secondsre := strconv.Itoa(seconds % 60)
@@ -336,8 +233,7 @@ func getColorPalette() {
 
 func main() {
 	utils.Initargs()
-	initascii()
+	utils.CutePrintInit(utils.Getascii(getDistro()))
 	handleConfig()
-	handleremainingascii()
-	print("\n")
+	utils.CutePrintEnd()
 }

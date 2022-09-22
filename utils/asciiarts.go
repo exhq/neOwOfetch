@@ -1,10 +1,6 @@
 package utils
 
-import (
-	"strings"
-)
-
-func Getascii(name string) []string {
+func Getascii(name string) string {
 	none := `!!!!!!!!!!!!!!!  
 !!!!!!!!!!!!!!!  
 !!!!noascii!!!!  
@@ -20,11 +16,10 @@ func Getascii(name string) []string {
 
 	switch name {
 	case "Arch Linux":
-		return strings.Split(arch, "\n")
+		return arch
 
 	default:
-		return strings.Split(none, "\n")
-
+		return none
 	}
 
 }
