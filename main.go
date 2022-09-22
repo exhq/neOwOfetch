@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"neowofetch/asciiart"
+	"neowofetch/utils"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -14,7 +14,7 @@ import (
 )
 
 var isuwuified bool = true
-var linearch []string
+var asciiart []string
 var aa int
 
 func getHome() string {
@@ -30,9 +30,9 @@ func getConfigFile() string {
 }
 
 func initascii() {
-	linearch = asciiart.Getascii(getDistro())
+	asciiart = utils.Asciioverwrite(utils.Getascii(getDistro()))
 	aa = 0
-	print(linearch[aa])
+	print(asciiart[aa])
 	aa = aa + 1
 }
 
@@ -72,15 +72,15 @@ func handlePrint(action, colour string, rest string) {
 	} else if action == "println" {
 		Cprint(colour, rest, true)
 		print("\n")
-		if aa < len(linearch) {
-			print(linearch[aa])
+		if aa < len(asciiart) {
+			print(asciiart[aa])
 		}
-		if aa == len(linearch) || aa == len(linearch)-1 {
-			print(strings.Repeat(" ", len(linearch[1])))
+		if aa == len(asciiart) || aa == len(asciiart)-1 {
+			print(strings.Repeat(" ", len(asciiart[1])))
 		}
 
-		if aa > len(linearch) {
-			print(strings.Repeat(" ", len(linearch[1])))
+		if aa > len(asciiart) {
+			print(strings.Repeat(" ", len(asciiart[1])))
 		}
 		incrementaa()
 	} else if action == "info" || action == "infoln" {
@@ -111,19 +111,18 @@ func handlePrint(action, colour string, rest string) {
 	if action == "infoln" {
 
 		print("\n")
-		if aa < len(linearch) {
-			print(linearch[aa])
+		if aa < len(asciiart) {
+			print(asciiart[aa])
 		} else {
-			print(strings.Repeat(" ", len(linearch[1])))
+			print(strings.Repeat(" ", len(asciiart[1])))
 		}
 		incrementaa()
 	}
 }
 
 func Cprint(colour string, message string, uwu bool) {
-	nouwu := len(os.Args) == 2 && os.Args[1] == "-nouwu"
 
-	if uwu && !nouwu {
+	if uwu && utils.Woulduwuify() {
 		message = uwuify(message)
 	}
 	yellow := color.New(color.FgYellow).SprintFunc()
@@ -181,19 +180,6 @@ func uwuify(message string) string {
 	return answer
 }
 
-func handleArgs() {
-	if len(os.Args) == 1 {
-		return
-	} else if len(os.Args) > 1 {
-		args := os.Args
-		for _, arg := range args {
-			if arg == "nouwu" {
-				isuwuified = false
-			}
-		}
-	}
-
-}
 func getHostname() string {
 	cmd := exec.Command("uname", "-n")
 	shell, _ := cmd.Output()
@@ -328,9 +314,9 @@ func getMemory(used bool) string {
 }
 
 func handleremainingascii() {
-	if aa < len(linearch) {
-		for i := 0; i < len(linearch)-aa; i++ {
-			print("\n", linearch[aa])
+	if aa < len(asciiart) {
+		for i := 0; i < len(asciiart)-aa; i++ {
+			print("\n", asciiart[aa])
 			incrementaa()
 
 		}
@@ -349,8 +335,8 @@ func getColorPalette() {
 }
 
 func main() {
+	utils.Initargs()
 	initascii()
-	handleArgs()
 	handleConfig()
 	handleremainingascii()
 	print("\n")
