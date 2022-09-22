@@ -17,10 +17,6 @@ var isuwuified bool = true
 var linearch []string
 var aa int
 
-func inituwu() {
-	print("bruh")
-}
-
 func getHome() string {
 	return os.Getenv("HOME")
 
@@ -50,7 +46,7 @@ func handleConfig() {
 	if os.IsNotExist(file) {
 		println("config was not found. a default config file has been generated in '~/.config/neowofetch/conf'")
 		f, _ := os.Create(getConfigFile())
-		_, _ = f.WriteString("println neOwOfetch 🔥\ninfo username\nprint @\ninfoln distro\nprint uptime:   \ninfo uptime")
+		_, _ = f.WriteString("println green neOwOfetch 🔥\nprint blue @\nprint white uptime:     \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:     \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:     \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll")
 	} else {
 		body, _ := ioutil.ReadFile(getConfigFile())
 		sbody := (string(body))
@@ -80,11 +76,11 @@ func handlePrint(action, colour string, rest string) {
 			print(linearch[aa])
 		}
 		if aa == len(linearch) || aa == len(linearch)-1 {
-			print(strings.Repeat(" ", 18))
+			print(strings.Repeat(" ", len(linearch[1])))
 		}
 
 		if aa > len(linearch) {
-			print(strings.Repeat(" ", 18))
+			print(strings.Repeat(" ", len(linearch[1])))
 		}
 		incrementaa()
 	} else if action == "info" || action == "infoln" {
@@ -102,6 +98,14 @@ func handlePrint(action, colour string, rest string) {
 			Cprint(colour, getGPU(), true)
 		case "shell":
 			Cprint(colour, getShell(), true)
+		case "terminal":
+			Cprint(colour, getTerminal(), true)
+		case "memoryAll":
+			Cprint(colour, getMemory(false), true)
+		case "memoryUsed":
+			Cprint(colour, getMemory(true), true)
+		default:
+			print("{UNKNOWN KEYWORD}")
 		}
 	}
 	if action == "infoln" {
@@ -110,7 +114,7 @@ func handlePrint(action, colour string, rest string) {
 		if aa < len(linearch) {
 			print(linearch[aa])
 		} else {
-			print(strings.Repeat(" ", 18))
+			print(strings.Repeat(" ", len(linearch[1])))
 		}
 		incrementaa()
 	}
@@ -165,6 +169,7 @@ func uwuify(message string) string {
 			if strings.Contains(strings.ToLower(word), "owo") {
 				word = strings.Replace(word, "o", "OwO", -1)
 			}
+			word = strings.Replace(word, "r", "w", -1)
 
 		}
 		if hasspace {
@@ -252,22 +257,22 @@ func getTheme() {
 func getIcons() {
 }
 func getTerminal() string {
-	_, exists := os.LookupEnv("TERM")
 	_, existprgm := os.LookupEnv("TERM_PROGRAM")
-	return ("exists=" + strconv.FormatBool(exists) + "existprgm=" + strconv.FormatBool(existprgm))
+	if !existprgm {
+		return os.Getenv("TERM")
+	} else {
+		return os.Getenv("TERM_PROGRAM")
+	}
+
 }
 func getCPU() {
-	mem, err := os.Open("/proc/cpuinfo")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(0)
-	}
+	mem, _ := os.Open("/proc/cpuinfo")
 	mem_info := make([]byte, 1024)
 	mem.Read(mem_info)
 	mem.Close()
-	mem_list := strings.Split(string(mem_info), "\n")
-	mem_map := make(map[string]string)
-	_, _ = mem_list, mem_map
+	// mem_list := strings.Split(string(mem_info), "\n")
+	// mem_map := make(map[string]string)
+	print(mem_info)
 }
 func getGPU() string {
 	cmd := exec.Command("lspci", "-v")
