@@ -15,7 +15,7 @@ func Getascii(name string) string {
 /_-''    ''-_\  `
 
 	switch name {
-	case "Arch Linux":
+	case "arch":
 		return arch
 
 	default:
