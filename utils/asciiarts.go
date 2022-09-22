@@ -1,4 +1,4 @@
-package asciiart
+package utils
 
 import (
 	"strings"
