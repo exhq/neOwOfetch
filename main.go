@@ -46,7 +46,7 @@ func handleConfig() {
 	if os.IsNotExist(file) {
 		println("config was not found. a default config file has been generated in '~/.config/neowofetch/conf'")
 		f, _ := os.Create(getConfigFile())
-		_, _ = f.WriteString("println green neOwOfetch 🔥\nprint blue @\nprint white uptime:     \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:     \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:     \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll")
+		_, _ = f.WriteString("println green neOwOfetch 🔥\ninfo magenta username\nprint blue @\ninfoln blue hostname\nprint white uptime:     \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:     \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:     \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll")
 	} else {
 		body, _ := ioutil.ReadFile(getConfigFile())
 		sbody := (string(body))
