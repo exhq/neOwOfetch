@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/exhq/neowofetch/data"
 	"github.com/exhq/neowofetch/utils"
 )
 
@@ -62,7 +63,7 @@ func handlePrint(action, format string, rest string) {
 	} else if action == "info" || action == "infoln" {
 		switch rest {
 		case "distro":
-			utils.CutePrint(getDistro(), format)
+			utils.CutePrint(data.GetDistro(), format)
 		case "username":
 			utils.CutePrint(getUsername(), format)
 		case "uptime":
@@ -100,27 +101,6 @@ func getUsername() string {
 	return strings.Replace(string(shell), "\n", "", -1)
 }
 
-func getDistro() string {
-	distro, err := os.Open("/etc/os-release")
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(0)
-	}
-	distro_info := make([]byte, 1024)
-	distro.Read(distro_info)
-	defer distro.Close()
-	distro_list := strings.Split(string(distro_info), "\n")
-	distro_tuples := make(map[string]string)
-	for _, v := range distro_list {
-		if strings.Contains(v, "=") {
-			kv := strings.Split(v, "=")
-			kv[0] = strings.TrimSpace(kv[0])
-			kv[1] = strings.TrimSpace(kv[1])
-			distro_tuples[kv[0]] = kv[1]
-		}
-	}
-	return strings.Trim(distro_tuples["PRETTY_NAME"], "\"")
-}
 func getKernel() string {
 	cmd := exec.Command("uname", "-r")
 	kernel, err := cmd.Output()
@@ -233,7 +213,7 @@ func getColorPalette() {
 
 func main() {
 	utils.Initargs()
-	utils.CutePrintInit(utils.Getascii(getDistro()))
+	utils.CutePrintInit()
 	handleConfig()
 	utils.CutePrintEnd()
 }

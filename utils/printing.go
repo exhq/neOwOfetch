@@ -1,9 +1,14 @@
 package utils
 
 import (
+	"encoding/base64"
 	"fmt"
 	"math/rand"
+	"os"
 	"strings"
+
+	"github.com/exhq/neowofetch/data"
+	"github.com/exhq/neowofetch/images"
 )
 
 func rgb(r, g, b int) string {
@@ -38,9 +43,19 @@ var isInProgressLine = false
 var logoLines []string
 var logoWidth int
 
-func CutePrintInit(logo string) {
+var pngWidth = 12
+var pngHeight = 12
+var pngData []byte
+
+func CutePrintInit() {
+	dist := data.GetDistroVariable("ID")
+	logo := Getascii(dist)
 	if noascii {
 		logo = ""
+	}
+	if usepng {
+		pngData = images.DistroImages[dist]
+		logo = strings.Repeat(" ", pngWidth) + strings.Repeat("\n", pngHeight)
 	}
 	logoLines = strings.Split(logo, "\n")
 	logoWidth = 0
@@ -57,13 +72,13 @@ func printLogoIfAtBeginningOfNewLine() {
 		isInProgressLine = true
 		if logoIndex < len(logoLines) {
 			logoLine := logoLines[logoIndex]
-			logoIndex += 1
 			logoLineLength := len([]rune(logoLine))
 			padding := strings.Repeat(" ", logoWidth-logoLineLength)
 			fmt.Printf("%s%s", logoLine, padding)
 		} else {
 			fmt.Printf("%s", strings.Repeat(" ", logoWidth))
 		}
+		logoIndex += 1
 	}
 }
 
@@ -102,15 +117,11 @@ func parseFormat(format string) (parsedFormat Format) {
 			switch v {
 			case "italic":
 				parsedFormat.colorFormat += "\x1b[3m"
-				break
 			case "bold":
 				parsedFormat.colorFormat += "\x1b1"
-				break
 			case "nouwu":
 				parsedFormat.noUwuOverride = true
-				break
 			case "*":
-				break
 			default:
 				//println("Unknown format code: ", v)
 			}
@@ -144,5 +155,13 @@ func CuteNewLine() {
 func CutePrintEnd() {
 	for logoIndex < len(logoLines) {
 		CuteNewLine()
+	}
+	if usepng {
+		fmt.Printf("\x1b[%dA", logoIndex)
+		fmt.Printf("\x1b]1337;File=inline=1;width=%d;height=%d:", pngWidth, pngHeight)
+		enc := base64.NewEncoder(base64.StdEncoding, os.Stdout)
+		enc.Write(images.DistroImages["arch"])
+		enc.Close()
+		fmt.Println("\a")
 	}
 }

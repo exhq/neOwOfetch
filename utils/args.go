@@ -8,6 +8,7 @@ import (
 var args []string
 var shoulduwuify bool = true
 var noascii bool = false
+var usepng bool = false
 
 func Initargs() {
 	args = os.Args[1:]
@@ -18,6 +19,8 @@ func Initargs() {
 				shoulduwuify = false
 			case "--noascii":
 				noascii = true
+			case "--usepng":
+				usepng = true
 			}
 		}
 	}
