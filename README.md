@@ -17,4 +17,4 @@ The information by default is displayed alongside your operating system's uwuifi
 
 You can further configure NeOwOfetch to your horrible taste. Through the use of command-line flags and idfk i havent implemented it yet.
 
-Neofetch supports almost like 2 different operating systems. From Linux to Linux. If your favourite operating system is unsupported i dont give a shit, ill get to it when i get to it. for now its just arch and ubuntu
+NeOwOfetch supports almost like 2 different operating systems. From Linux to Linux. If your favourite operating system is unsupported i dont give a shit, ill get to it when i get to it. for now its just arch and ubuntu
