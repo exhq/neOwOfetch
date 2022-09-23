@@ -9,6 +9,7 @@ var args []string
 var shoulduwuify bool = true
 var noascii bool = false
 var usepng bool = false
+var hascolor bool = true
 
 func Initargs() {
 	args = os.Args[1:]
@@ -21,6 +22,8 @@ func Initargs() {
 				noascii = true
 			case "--usepng":
 				usepng = true
+			case "--nocolor":
+				hascolor = false
 			}
 		}
 	}

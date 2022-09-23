@@ -213,6 +213,7 @@ func getColorPalette() {
 
 func main() {
 	utils.Initargs()
+	utils.Initcolor()
 	utils.CutePrintInit()
 	handleConfig()
 	utils.CutePrintEnd()
