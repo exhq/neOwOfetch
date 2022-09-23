@@ -3,8 +3,9 @@ package utils
 import (
 	"encoding/base64"
 	"fmt"
-	"math/rand"
 	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/exhq/neowofetch/data"
@@ -15,29 +16,8 @@ func rgb(r, g, b int) string {
 	return fmt.Sprintf("\x1b[38:2::%d:%d:%dm", r, g, b)
 }
 
-var colors = map[string]string{
-	"green": rgb(0, 255, 0),
-	"blue":  rgb(0, 0, 255),
-	"red":   rgb(255, 0, 0),
-}
+var colors = make(map[string]string)
 
-var uwuEmotes = [15]string{
-	"owo",
-	"UwU",
-	">w<",
-	"^w^",
-	"●w●",
-	"☆w☆",
-	"𝗨𝘄𝗨",
-	"(´꒳`)",
-	"♥(。U ω U。)",
-	"(˘ε˘)",
-	"( ˘ᴗ˘ )",
-	"(*ฅ́˘ฅ̀*)",
-	"*screams*",
-	"*twerks*",
-	"*sweats*",
-}
 var logoIndex = 0
 var isInProgressLine = false
 var logoLines []string
@@ -47,6 +27,34 @@ var pngWidth = 12
 var pngHeight = 12
 var pngData []byte
 
+func Initcolor() {
+	colorconf := os.Getenv("HOME") + "/.config/neowofetch/colors"
+	folderconf := filepath.Dir(colorconf)
+
+	_, existcolorconf := os.Stat(colorconf)
+	_, existfolderconf := os.Stat(folderconf)
+
+	if os.IsNotExist(existfolderconf) {
+		os.Mkdir(folderconf, os.ModePerm)
+	}
+	if os.IsNotExist(existcolorconf) {
+		println("color was not found. a default config file has been generated in '~/.config/neowofetch/colors'. rerun the program")
+		f, _ := os.Create(colorconf)
+		_, _ = f.WriteString("red 255 0 0 \nblue 0 255 0\nred 0 0 255\nwhite 255 255 255")
+		os.Exit(0)
+	}
+
+	content, _ := os.ReadFile(colorconf)
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		word := strings.Split(line, " ")
+		R, _ := strconv.Atoi(word[1])
+		G, _ := strconv.Atoi(word[2])
+		B, _ := strconv.Atoi(word[3])
+		colors[word[0]] = rgb(R, G, B)
+	}
+}
+
 func CutePrintInit() {
 	dist := data.GetDistroVariable("ID")
 	logo := Getascii(dist)
@@ -55,7 +63,7 @@ func CutePrintInit() {
 	}
 	if usepng {
 		pngData = images.DistroImages[dist]
-		logo = strings.Repeat(" ", pngWidth) + strings.Repeat("\n", pngHeight)
+		logo = strings.Repeat(" ", pngWidth) + " " + strings.Repeat("\n", pngHeight)
 	}
 	logoLines = strings.Split(logo, "\n")
 	logoWidth = 0
@@ -111,7 +119,7 @@ type Format struct {
 func parseFormat(format string) (parsedFormat Format) {
 	for _, v := range strings.Split(format, "|") {
 		colorFormat, isColor := colors[v]
-		if isColor {
+		if isColor && hascolor {
 			parsedFormat.colorFormat += colorFormat
 		} else {
 			switch v {
@@ -123,7 +131,9 @@ func parseFormat(format string) (parsedFormat Format) {
 				parsedFormat.noUwuOverride = true
 			case "*":
 			default:
-				//println("Unknown format code: ", v)
+				if hascolor {
+					println("Unknown format code: ", v)
+				}
 			}
 		}
 	}
@@ -145,9 +155,6 @@ func CutePrint(
 
 func CuteNewLine() {
 	printLogoIfAtBeginningOfNewLine()
-	if rand.Intn(5) == 0 && shoulduwuify {
-		fmt.Printf(" %s", uwuEmotes[rand.Intn(len(uwuEmotes))])
-	}
 	isInProgressLine = false
 	fmt.Println()
 }
