@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -58,6 +59,12 @@ func Initcolor() {
 func CutePrintInit() {
 	dist := data.GetDistroVariable("ID")
 	logo := Getascii(dist)
+
+	if Customascii {
+		body, _ := ioutil.ReadFile(asciidir)
+		logo = (string(body))
+	}
+
 	if noascii {
 		logo = ""
 	}
@@ -70,7 +77,7 @@ func CutePrintInit() {
 	for _, v := range logoLines {
 		lineLength := len([]rune(v))
 		if lineLength > logoWidth {
-			logoWidth = lineLength
+			logoWidth = lineLength + 2
 		}
 	}
 }
