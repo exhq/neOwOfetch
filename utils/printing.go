@@ -59,18 +59,19 @@ func Initcolor() {
 func CutePrintInit() {
 	dist := data.GetDistroVariable("ID")
 	logo := Getascii(dist)
-
-	if Customascii {
-		body, _ := ioutil.ReadFile(asciidir)
-		logo = (string(body))
+	if asciiforced {
+		logo = Getascii(forceddistro)
 	}
-
 	if noascii {
 		logo = ""
 	}
 	if usepng {
 		pngData = images.DistroImages[dist]
 		logo = strings.Repeat(" ", pngWidth) + " " + strings.Repeat("\n", pngHeight)
+	}
+	if Customascii {
+		body, _ := ioutil.ReadFile(asciidir)
+		logo = (string(body))
 	}
 	logoLines = strings.Split(logo, "\n")
 	logoWidth = 0
@@ -147,6 +148,14 @@ func parseFormat(format string) (parsedFormat Format) {
 	return parsedFormat
 }
 
+func getcustomizeddistro() string {
+	if !asciiforced {
+		return data.GetDistroVariable("ID")
+	} else {
+		return forceddistro
+	}
+}
+
 func CutePrint(
 	message string,
 	format string,
@@ -174,7 +183,7 @@ func CutePrintEnd() {
 		fmt.Printf("\x1b[%dA", logoIndex)
 		fmt.Printf("\x1b]1337;File=inline=1;width=%d;height=%d:", pngWidth, pngHeight)
 		enc := base64.NewEncoder(base64.StdEncoding, os.Stdout)
-		enc.Write(images.DistroImages["arch"])
+		enc.Write(images.DistroImages[getcustomizeddistro()])
 		enc.Close()
 		fmt.Println("\a")
 	}
