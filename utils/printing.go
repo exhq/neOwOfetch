@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/exhq/neowofetch/asciiarts"
 	"github.com/exhq/neowofetch/data"
 	"github.com/exhq/neowofetch/images"
 )
@@ -58,9 +59,9 @@ func Initcolor() {
 
 func CutePrintInit() {
 	dist := data.GetDistroVariable("ID")
-	logo := Getascii(dist)
+	logo := asciiarts.GetAscii(dist)
 	if asciiforced {
-		logo = Getascii(forceddistro)
+		logo = asciiarts.GetAscii(forceddistro)
 	}
 	if noascii {
 		logo = ""
@@ -76,9 +77,9 @@ func CutePrintInit() {
 	logoLines = strings.Split(logo, "\n")
 	logoWidth = 0
 	for _, v := range logoLines {
-		lineLength := len([]rune(v))
+		lineLength := len([]rune(v)) + 2
 		if lineLength > logoWidth {
-			logoWidth = lineLength + 2
+			logoWidth = lineLength
 		}
 	}
 }
