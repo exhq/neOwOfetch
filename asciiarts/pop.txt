@@ -4,4 +4,3 @@
       | {LPINK}~  {WHITE}P! {LPINK}~ {BLUE}|
 _   ---\   ω   /
  \_/    '-----'
-

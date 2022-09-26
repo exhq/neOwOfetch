@@ -5,4 +5,3 @@
       | {LPINK}~  {WHITE}S   {LPINK}~ {MAGENTA}|
 _   ---\   ω   /
  \_/    '-----'
-

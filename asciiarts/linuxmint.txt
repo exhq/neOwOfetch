@@ -4,4 +4,3 @@
  {WHITE}||  {GREEN}| {WHITE}|    | {GREEN}|
  {WHITE} |  {GREEN}|  {WHITE}----  {GREEN}|
  {WHITE}  --{GREEN}'--------'
-
