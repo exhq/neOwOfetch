@@ -42,7 +42,7 @@ func Initcolor() {
 	if os.IsNotExist(existcolorconf) {
 		println("color was not found. a default config file has been generated in '~/.config/neowofetch/colors'. rerun the program")
 		f, _ := os.Create(colorconf)
-		_, _ = f.WriteString("red 255 0 0 \nblue 0 255 0\nred 0 0 255\nwhite 255 255 255")
+		_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
 		os.Exit(0)
 	}
 

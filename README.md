@@ -41,7 +41,7 @@ examples:
 `info bold|yellow|nouwu GPU` this would print out your GPU in a bold yellow color without uwuifying. NOTICE: not all fonts support bold/italic
 
 ### colors file
-
+ 
 this file is pretty self explainatory, you can define your own colors in RGB which you can later use in your conf file
 example:
 blue 0 0 255

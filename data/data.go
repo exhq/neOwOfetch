@@ -87,9 +87,9 @@ func GetMemory(used bool) string {
 	mem_used := mem_total - mem_free
 	//memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)
 	if used {
-		return strconv.Itoa(mem_used / 1024)
+		return formatmem(mem_used / 1024)
 	} else {
-		return strconv.Itoa(mem_total / 1024)
+		return formatmem(mem_total / 1024)
 	}
 }
 func GetHome() string {
@@ -141,6 +141,9 @@ func GetTerminal() string {
 		return a
 	}
 
+}
+func formatmem(input int) string {
+	return strconv.Itoa(input) + "MiB"
 }
 func GetShell() string {
 	return os.Getenv("SHELL")
