@@ -92,6 +92,9 @@ var void string
 //go:embed xerolinux.txt
 var xerolinux string
 
+//go:embed windows.txt
+var windows string
+
 func GetAsciiInternal(distroID string) string {
 	switch distroID {
 	case "alpine":
@@ -147,7 +150,8 @@ func GetAsciiInternal(distroID string) string {
 
 	case "arch":
 		return arch
-
+	case "windows":
+		return windows
 	default:
 		return unknown
 	}

@@ -19,6 +19,40 @@ You can further configure NeOwOfetch to your horrible taste. Through the use of 
 
 NeOwOfetch supports almost like 2 different operating systems. From Linux to Linux. If your favourite operating system is unsupported i dont give a shit, ill get to it when i get to it. for now its just arch and ubuntu  
 
+<h1 align="center">how to use</h1>
+
+after you decided that you have enough brain damage to use this mess, you can clone this repo (`git clone https://github.com/exhq/neowofetch`)  
+
+after cloning this mess, you can either run it (`go run main.go`) or install it (`go install main.go`) which will add it to your /usr/bin
 
 
-jokes aside, the asciiarts are from uwufetch, all credits go to them.
+<h1 align="center">customizibility</h1>
+
+after running the program for the first time, there should be two files in `~/.config/neowofetch/`    
+### conf file
+
+`conf` is the layout of the information. 
+the syntax is `print/info */bold/bold|blue info/text`
+
+examples:
+`println italic|blue hello world` this would print an italic blue "hello world" that ends with a new line. (if you dont want the newline, replace `println` with `print`)
+
+
+`info bold|yellow|nouwu GPU` this would print out your GPU in a bold yellow color without uwuifying. NOTICE: not all fonts support bold/italic
+
+### colors file
+
+this file is pretty self explainatory, you can define your own colors in RGB which you can later use in your conf file
+example:
+blue 0 0 255
+
+<h1 align="center">commandline arguments</h1>
+
+`--noascii` turns the asciiart off  
+`--usepng`  uses png instead of asciiarts (still on beta)  
+`ascii=<file dir>` uses your txt file as the ascii art  
+`--distro=<distroname>` forced the program to use another distro's asciiart  
+`--nouwu` turns off uwuifiation for all lines  
+`--nocolor` i think you can figure out what this argument does
+
+<p align="center">jokes aside, the asciiarts are from uwufetch, all credits go to them.</p>
