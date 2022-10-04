@@ -50,9 +50,10 @@ blue 0 0 255
 
 `--noascii` turns the asciiart off  
 `--usepng`  uses png instead of asciiarts (still on beta)  
-`ascii=<file dir>` uses your txt file as the ascii art  
+`--ascii=<file dir>` uses your txt file as the ascii art  
 `--distro=<distroname>` forced the program to use another distro's asciiart  
 `--nouwu` turns off uwuifiation for all lines  
 `--nocolor` i think you can figure out what this argument does
-
+`--noconf` instead of using the config file, itll use a built-in default config
+`--nocolorconf` ....do i reallt have to explain the differences?
 <p align="center">jokes aside, the asciiarts are from uwufetch, all credits go to them.</p>
