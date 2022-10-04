@@ -15,6 +15,8 @@ var Customascii = false
 var asciidir string
 var asciiforced = false
 var forceddistro string
+var Defaultconf bool = false
+var Defaultcolor bool = false
 
 func Gethn() string {
 	cmd := exec.Command("whoami")
@@ -41,6 +43,10 @@ func Initargs() {
 				usepng = true
 			case "--nocolor":
 				hascolor = false
+			case "--noconf":
+				Defaultconf = true
+			case "--nocolorconf":
+				Defaultcolor = true
 			}
 		}
 	}

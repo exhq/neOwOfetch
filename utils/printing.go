@@ -46,7 +46,11 @@ func Initcolor() {
 		os.Exit(0)
 	}
 
-	content, _ := os.ReadFile(colorconf)
+	c, _ := os.ReadFile(colorconf)
+	content := string(c)
+	if Defaultcolor {
+		content = "red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255"
+	}
 	lines := strings.Split(string(content), "\n")
 	for _, line := range lines {
 		word := strings.Split(line, " ")
@@ -99,14 +103,14 @@ func printLogoIfAtBeginningOfNewLine() {
 	}
 }
 
-func uwuify(message string) (ret string) {
+func uwuify(message string) string {
 	sentence := strings.Split(message, " ")
-	ret = ""
+	ret := ""
 	for i, word := range sentence {
 		if !strings.Contains(strings.ToLower(word), "uwu") {
 			word = strings.ReplaceAll(word, "u", "UwU")
 
-			if strings.Contains(strings.ToLower(word), "owo") {
+			if !strings.Contains(strings.ToLower(word), "owo") {
 				word = strings.ReplaceAll(word, "o", "OwO")
 			}
 			word = strings.ReplaceAll(word, "r", "w")
