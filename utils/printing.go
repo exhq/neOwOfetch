@@ -19,6 +19,7 @@ func rgb(r, g, b int) string {
 }
 
 var colors = make(map[string]string)
+var oldcolors = make(map[string]int)
 
 var logoIndex = 0
 var isInProgressLine = false
@@ -52,12 +53,15 @@ func Initcolor() {
 		content = "red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255"
 	}
 	lines := strings.Split(string(content), "\n")
+
 	for _, line := range lines {
 		word := strings.Split(line, " ")
+
 		R, _ := strconv.Atoi(word[1])
 		G, _ := strconv.Atoi(word[2])
 		B, _ := strconv.Atoi(word[3])
 		colors[word[0]] = rgb(R, G, B)
+
 	}
 }
 
@@ -125,13 +129,15 @@ func uwuify(message string) string {
 }
 
 type Format struct {
-	noUwuOverride bool
-	colorFormat   string
+	noUwuOverride  bool
+	colorFormat    string
+	oldcolorFormat int
 }
 
 func parseFormat(format string) (parsedFormat Format) {
 	for _, v := range strings.Split(format, "|") {
 		colorFormat, isColor := colors[v]
+		parsedFormat.colorFormat += colorFormat
 		if isColor && hascolor {
 			parsedFormat.colorFormat += colorFormat
 		} else {
@@ -144,7 +150,7 @@ func parseFormat(format string) (parsedFormat Format) {
 				parsedFormat.noUwuOverride = true
 			case "*":
 			default:
-				if hascolor {
+				if hascolor && !colorold {
 					println("Unknown format code: ", v)
 				}
 			}
@@ -171,7 +177,34 @@ func CutePrint(
 	if willUwuify {
 		message = uwuify(message)
 	}
-	fmt.Printf("%s%s\x1b[0m", parsedFormat.colorFormat, message)
+	if !colorold {
+		fmt.Printf("%s%s\x1b[0m", parsedFormat.colorFormat, message)
+	} else {
+
+		if colorold && hascolor {
+			switch {
+			case strings.Contains(format, "black"):
+				fmt.Printf("\033[1;30m%s\033[0m", message)
+			case strings.Contains(format, "red"):
+				fmt.Printf("\033[1;31m%s\033[0m", message)
+			case strings.Contains(format, "green"):
+				fmt.Printf("\033[1;32m%s\033[0m", message)
+			case strings.Contains(format, "yellow"):
+				fmt.Printf("\033[1;33m%s\033[0m", message)
+			case strings.Contains(format, "blue"):
+				fmt.Printf("\033[1;34m%s\033[0m", message)
+			case strings.Contains(format, "magenta"):
+				fmt.Printf("\033[1;35m%s\033[0m", message)
+			case strings.Contains(format, "cyan"):
+				fmt.Printf("\033[1;36m%s\033[0m", message)
+			case strings.Contains(format, "white"):
+				fmt.Printf("\033[1;37m%s\033[0m", message)
+			case strings.Contains(format, "*"):
+				fmt.Printf("\033[1;37m%s\033[0m", message)
+			}
+		}
+	}
+
 }
 
 func CuteNewLine() {
