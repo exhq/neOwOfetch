@@ -8,6 +8,9 @@ import (
 //go:embed alpine.txt
 var alpine string
 
+//go:embed amog.txt
+var amog string
+
 //go:embed unknown.txt
 var unknown string
 
@@ -152,6 +155,8 @@ func GetAsciiInternal(distroID string) string {
 		return arch
 	case "windows":
 		return windows
+	case "amog":
+		return amog
 	default:
 		return unknown
 	}

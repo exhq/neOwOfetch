@@ -17,6 +17,7 @@ var asciiforced = false
 var forceddistro string
 var Defaultconf bool = false
 var Defaultcolor bool = false
+var colorold bool = false
 
 func Gethn() string {
 	cmd := exec.Command("whoami")
@@ -47,6 +48,11 @@ func Initargs() {
 				Defaultconf = true
 			case "--nocolorconf":
 				Defaultcolor = true
+			case "--16color":
+				colorold = true
+			default:
+				print("unknown argument: ", argument, "\n")
+				os.Exit(0)
 			}
 		}
 	}
