@@ -55,6 +55,9 @@ func Initcolor() {
 	lines := strings.Split(string(content), "\n")
 
 	for _, line := range lines {
+		if line == "" {
+			continue
+		}
 		word := strings.Split(line, " ")
 
 		R, _ := strconv.Atoi(word[1])
