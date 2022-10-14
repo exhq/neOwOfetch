@@ -13,6 +13,13 @@ import (
 
 var isuwuified bool = true
 
+func checkforconfigfolder(){
+	_, folder := os.Stat(data.GetHome()+"/.config")
+	if os.IsNotExist(folder) {
+		os.Mkdir(data.GetHome()+"/.config", os.ModePerm)
+	}
+}
+
 func handleConfig() {
 	_, folder := os.Stat(filepath.Dir(data.GetConfigFile()))
 	_, file := os.Stat(data.GetConfigFile())
@@ -84,6 +91,7 @@ func handlePrint(action, format string, rest string) {
 }
 
 func main() {
+    checkforconfigfolder()
 	utils.Initargs()
 	utils.Initcolor()
 	utils.CutePrintInit()
