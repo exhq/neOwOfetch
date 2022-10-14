@@ -150,8 +150,9 @@ func GetAsciiInternal(distroID string) string {
 		return void
 	case "xerolinux":
 		return xerolinux
-
 	case "arch":
+		return arch
+	case "Archcraft":
 		return arch
 	case "windows":
 		return windows
