@@ -99,7 +99,7 @@ var xerolinux string
 var windows string
 
 func GetAsciiInternal(distroID string) string {
-	switch distroID {
+	switch strings.ToLower(distroID) {
 	case "alpine":
 		return alpine
 	case "arcolinux":
@@ -150,9 +150,7 @@ func GetAsciiInternal(distroID string) string {
 		return void
 	case "xerolinux":
 		return xerolinux
-	case "arch":
-		return arch
-	case "Archcraft":
+	case "arch", "Archcraft":
 		return arch
 	case "windows":
 		return windows

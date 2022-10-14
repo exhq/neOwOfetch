@@ -30,12 +30,12 @@ var pngWidth = 12
 var pngHeight = 12
 var pngData []byte
 
-func Initcolor() {
-	colorconf := os.Getenv("HOME") + "/.config/neowofetch/colors"
-	folderconf := filepath.Dir(colorconf)
+var colorconf = os.Getenv("HOME") + "/.config/neowofetch/colors"
+var folderconf = filepath.Dir(colorconf)
+var _, existcolorconf = os.Stat(colorconf)
+var _, existfolderconf = os.Stat(folderconf)
 
-	_, existcolorconf := os.Stat(colorconf)
-	_, existfolderconf := os.Stat(folderconf)
+func Initcolor() {
 
 	if os.IsNotExist(existfolderconf) {
 		os.Mkdir(folderconf, os.ModePerm)
@@ -180,8 +180,12 @@ func CutePrint(
 	if !colorold {
 		fmt.Printf("%s%s\x1b[0m", parsedFormat.colorFormat, message)
 	} else {
-
-		if colorold && hascolor {
+		if os.IsNotExist(existcolorconf) {
+			println("color was not found. a default config file has been generated in '~/.config/neowofetch/colors'. rerun the program")
+			f, _ := os.Create(colorconf)
+			_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
+			os.Exit(0)
+		} else if colorold && hascolor {
 			switch {
 			case strings.Contains(format, "black"):
 				fmt.Printf("\033[1;30m%s\033[0m", message)
@@ -201,6 +205,7 @@ func CutePrint(
 				fmt.Printf("\033[1;37m%s\033[0m", message)
 			case strings.Contains(format, "*"):
 				fmt.Printf("\033[1;37m%s\033[0m", message)
+
 			}
 		}
 	}

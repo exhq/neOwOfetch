@@ -19,16 +19,17 @@ func handleConfig() {
 	if os.IsNotExist(folder) {
 		os.Mkdir(filepath.Dir(data.GetConfigFile()), os.ModePerm)
 	}
-
+	defaultconfig := "println green neOwOfetchh 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white uptime:   \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:   \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:   \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll"
 	if os.IsNotExist(file) {
 		println("config was not found. a default config file has been generated in '~/.config/neowofetch/conf'. rerun the program")
 		f, _ := os.Create(data.GetConfigFile())
-		_, _ = f.WriteString("println green neOwOfetch 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white uptime:   \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:     \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:     \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll")
+		_, _ = f.WriteString(defaultconfig)
+		os.Exit(0)
 	} else {
 		body, _ := ioutil.ReadFile(data.GetConfigFile())
 		sbody := (string(body))
 		if utils.Defaultconf {
-			sbody = "println green neOwOfetchh 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white uptime:   \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:     \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:     \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll"
+			sbody = defaultconfig
 		}
 		fbody := strings.Split(sbody, "\n")
 		for _, line := range fbody {
