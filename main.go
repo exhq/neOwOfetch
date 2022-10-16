@@ -13,8 +13,8 @@ import (
 
 var isuwuified bool = true
 
-func checkforconfigfolder(){
-	_, folder := os.Stat(data.GetHome()+"/.config")
+func checkforconfigfolder() {
+	_, folder := os.Stat(data.GetHome() + "/.config")
 	if os.IsNotExist(folder) {
 		os.Mkdir(data.GetHome()+"/.config", os.ModePerm)
 	}
@@ -28,30 +28,25 @@ func handleConfig() {
 	}
 	defaultconfig := "println green neOwOfetchh 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white uptime:   \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:   \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:   \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll"
 	if os.IsNotExist(file) {
-		println("config was not found. a default config file has been generated in '~/.config/neowofetch/conf'. rerun the program")
 		f, _ := os.Create(data.GetConfigFile())
 		_, _ = f.WriteString(defaultconfig)
-		os.Exit(0)
-	} else {
-		body, _ := ioutil.ReadFile(data.GetConfigFile())
-		sbody := (string(body))
-		if utils.Defaultconf {
-			sbody = defaultconfig
-		}
-		fbody := strings.Split(sbody, "\n")
-		for _, line := range fbody {
-			word := strings.Split(line, " ")
-			if len(word) < 3 {
-				continue
-			}
-			action := word[0]
-			color := word[1]
-			rest := strings.Join(word[2:], " ")
-			handlePrint(action, color, rest)
-		}
-
 	}
-
+	body, _ := ioutil.ReadFile(data.GetConfigFile())
+	sbody := (string(body))
+	if utils.Defaultconf {
+		sbody = defaultconfig
+	}
+	fbody := strings.Split(sbody, "\n")
+	for _, line := range fbody {
+		word := strings.Split(line, " ")
+		if len(word) < 3 {
+			continue
+		}
+		action := word[0]
+		color := word[1]
+		rest := strings.Join(word[2:], " ")
+		handlePrint(action, color, rest)
+	}
 }
 
 func handlePrint(action, format string, rest string) {
@@ -91,7 +86,7 @@ func handlePrint(action, format string, rest string) {
 }
 
 func main() {
-    checkforconfigfolder()
+	checkforconfigfolder()
 	utils.Initargs()
 	utils.Initcolor()
 	utils.CutePrintInit()

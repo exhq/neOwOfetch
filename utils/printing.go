@@ -20,6 +20,17 @@ func rgb(r, g, b int) string {
 
 var colors = make(map[string]string)
 var oldcolors = make(map[string]int)
+var color_map = map[string]string{
+	"black":   "30",
+	"red":     "31",
+	"green":   "32",
+	"yellow":  "33",
+	"blue":    "34",
+	"magenta": "35",
+	"cyan":    "36",
+	"white":   "37",
+	"*":       "37",
+}
 
 var logoIndex = 0
 var isInProgressLine = false
@@ -41,10 +52,8 @@ func Initcolor() {
 		os.Mkdir(folderconf, os.ModePerm)
 	}
 	if os.IsNotExist(existcolorconf) {
-		println("color was not found. a default config file has been generated in '~/.config/neowofetch/colors'. rerun the program")
 		f, _ := os.Create(colorconf)
 		_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
-		os.Exit(0)
 	}
 
 	c, _ := os.ReadFile(colorconf)
@@ -184,31 +193,15 @@ func CutePrint(
 		fmt.Printf("%s%s\x1b[0m", parsedFormat.colorFormat, message)
 	} else {
 		if os.IsNotExist(existcolorconf) {
-			println("color was not found. a default config file has been generated in '~/.config/neowofetch/colors'. rerun the program")
 			f, _ := os.Create(colorconf)
 			_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
-			os.Exit(0)
-		} else if colorold && hascolor {
-			switch {
-			case strings.Contains(format, "black"):
-				fmt.Printf("\033[1;30m%s\033[0m", message)
-			case strings.Contains(format, "red"):
-				fmt.Printf("\033[1;31m%s\033[0m", message)
-			case strings.Contains(format, "green"):
-				fmt.Printf("\033[1;32m%s\033[0m", message)
-			case strings.Contains(format, "yellow"):
-				fmt.Printf("\033[1;33m%s\033[0m", message)
-			case strings.Contains(format, "blue"):
-				fmt.Printf("\033[1;34m%s\033[0m", message)
-			case strings.Contains(format, "magenta"):
-				fmt.Printf("\033[1;35m%s\033[0m", message)
-			case strings.Contains(format, "cyan"):
-				fmt.Printf("\033[1;36m%s\033[0m", message)
-			case strings.Contains(format, "white"):
-				fmt.Printf("\033[1;37m%s\033[0m", message)
-			case strings.Contains(format, "*"):
-				fmt.Printf("\033[1;37m%s\033[0m", message)
-
+		}
+		if colorold && hascolor {
+			for k, v := range color_map {
+				if strings.Contains(format, k) {
+					fmt.Printf("\033[1;%sm%s\033[m", v, message)
+					break
+				}
 			}
 		}
 	}
