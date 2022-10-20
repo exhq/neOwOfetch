@@ -65,7 +65,9 @@ func handlePrint(action, format string, rest string) {
 			no, _ := strconv.Atoi(data.GetUptime())
 			utils.CutePrint(data.FormatTime(no), format)
 		case "hostname":
-			utils.CutePrint(data.GetHostname(), format)
+			utils.CutePrint(data.Unamebs("-n"), format)
+		case "kernelname":
+			utils.CutePrint(data.Unamebs("-s"), format)
 		case "GPU":
 			utils.CutePrint(data.GetGPU(), format)
 		case "shell":

@@ -45,8 +45,8 @@ func GetKernel() string {
 	return string(kernel)
 }
 
-func GetHostname() string {
-	cmd := exec.Command("uname", "-n")
+func Unamebs(gamering string) string {
+	cmd := exec.Command("uname", gamering)
 	shell, _ := cmd.Output()
 	return strings.Replace(string(shell), "\n", "", -1)
 }
