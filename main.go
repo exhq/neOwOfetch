@@ -20,13 +20,6 @@ func checkforconfigfolder() {
 	}
 }
 
-func termuxcheck() {
-	if strings.Contains(os.Getenv("OSTYPE"), "android") {
-		print("lmao go buy a pc broke ass mf 💀\n")
-		os.Exit(0)
-	}
-}
-
 func handleConfig() {
 	_, folder := os.Stat(filepath.Dir(data.GetConfigFile()))
 	_, file := os.Stat(data.GetConfigFile())
@@ -95,7 +88,6 @@ func handlePrint(action, format string, rest string) {
 }
 
 func main() {
-	termuxcheck()
 	checkforconfigfolder()
 	utils.Initargs()
 	utils.Initcolor()
