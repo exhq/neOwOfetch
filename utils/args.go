@@ -13,8 +13,8 @@ var usepng bool = false
 var hascolor bool = true
 var Customascii = false
 var asciidir string
-var asciiforced = false
-var forceddistro string
+var Asciiforced = false
+var Forceddistro string
 var Defaultconf bool = false
 var Defaultcolor bool = false
 var colorold bool = false
@@ -32,8 +32,8 @@ func Initargs() {
 			asciidir = strings.ReplaceAll(argument[8:], "~", "/home/"+Gethn())
 		}
 		if strings.HasPrefix(argument, "--distro=") {
-			asciiforced = true
-			forceddistro = argument[9:]
+			Asciiforced = true
+			Forceddistro = argument[9:]
 		} else if strings.HasPrefix(argument, "--") {
 			switch argument {
 			case "--nouwu":

@@ -37,6 +37,7 @@ var isInProgressLine = false
 var logoLines []string
 var logoWidth int
 
+var defaultcolor = "red 255 38 116 \ngreen 16 210 117\nblue 104 174 212\nwhite 250 253 255"
 var pngWidth = 12
 var pngHeight = 12
 var pngData []byte
@@ -53,13 +54,13 @@ func Initcolor() {
 	}
 	if os.IsNotExist(existcolorconf) {
 		f, _ := os.Create(colorconf)
-		_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
+		_, _ = f.WriteString(defaultcolor)
 	}
 
 	c, _ := os.ReadFile(colorconf)
 	content := string(c)
 	if Defaultcolor {
-		content = "red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255"
+		content = defaultcolor
 	}
 	lines := strings.Split(string(content), "\n")
 
@@ -80,8 +81,8 @@ func Initcolor() {
 func CutePrintInit() {
 	dist := data.GetDistroVariable("ID")
 	logo := asciiarts.GetAscii(dist)
-	if asciiforced {
-		logo = asciiarts.GetAscii(forceddistro)
+	if Asciiforced {
+		logo = asciiarts.GetAscii(Forceddistro)
 	}
 	if noascii {
 		logo = ""
@@ -172,10 +173,10 @@ func parseFormat(format string) (parsedFormat Format) {
 }
 
 func getcustomizeddistro() string {
-	if !asciiforced {
+	if !Asciiforced {
 		return data.GetDistroVariable("ID")
 	} else {
-		return forceddistro
+		return Forceddistro
 	}
 }
 
