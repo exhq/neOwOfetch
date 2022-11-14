@@ -13,8 +13,6 @@ func GetGPU() string {
 	shell, err := cmd.Output()
 	_ = err
 	var bruh string
-	//return strings.Replace(string(shell), "\n", "", -1)
-	//return string(shell)
 	for _, line := range strings.Split(strings.TrimSuffix(string(shell), "\n"), "\n") {
 		if strings.Contains(line, "VGA") {
 			bruh += line[strings.Index(line, ": ")+2 : strings.Index(line, " (")]
@@ -85,7 +83,6 @@ func GetMemory(used bool) string {
 	mem_free, _ := strconv.Atoi(mem_map["MemFree"])
 	mem_total, _ := strconv.Atoi(mem_map["MemTotal"])
 	mem_used := mem_total - mem_free
-	//memory := fmt.Sprintf("%d/%d", mem_used/1024, mem_total/1024)
 	if used {
 		return formatmem(mem_used / 1024)
 	} else {
@@ -148,12 +145,14 @@ func formatmem(input int) string {
 func GetShell() string {
 	return os.Getenv("SHELL")
 }
+func GetWM() string {
+	return os.Getenv("XDG_CURRENT_DESKTOP")
+}
 func getPackages() {
 }
 func getResolution() {
 }
-func getWM() {
-}
+
 func getTheme() {
 }
 func getIcons() {

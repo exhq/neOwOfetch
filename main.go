@@ -78,8 +78,10 @@ func handlePrint(action, format string, rest string) {
 			utils.CutePrint(data.GetMemory(false), format)
 		case "memoryUsed":
 			utils.CutePrint(data.GetMemory(true), format)
+		case "wm":
+			utils.CutePrint(data.GetWM(), format)
 		default:
-			print("{UNKNOWN KEYWORD}")
+			print("{UNKNOWN KEYWORD: " + rest + "}")
 		}
 		if action == "infoln" {
 			utils.CuteNewLine()
