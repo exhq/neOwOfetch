@@ -58,7 +58,11 @@ func handlePrint(action, format string, rest string) {
 	} else if action == "info" || action == "infoln" {
 		switch rest {
 		case "distro":
-			utils.CutePrint(data.GetDistro(), format)
+			if utils.Asciiforced {
+				utils.CutePrint(utils.Forceddistro, format)
+			} else {
+				utils.CutePrint(data.GetDistro(), format)
+			}
 		case "username":
 			utils.CutePrint(data.GetUsername(), format)
 		case "uptime":

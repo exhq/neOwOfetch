@@ -57,7 +57,3 @@ func Initargs() {
 		}
 	}
 }
-
-func Woulduwuify() bool {
-	return shoulduwuify
-}
