@@ -142,6 +142,7 @@ func uwuify(message string) string {
 }
 
 type Format struct {
+	spaces         int
 	noUwuOverride  bool
 	colorFormat    string
 	oldcolorFormat int
@@ -154,6 +155,10 @@ func parseFormat(format string) (parsedFormat Format) {
 		if isColor && hascolor {
 			parsedFormat.colorFormat += colorFormat
 		} else {
+			if strings.HasPrefix(v, "space") {
+				parsedFormat.spaces, _ = strconv.Atoi(v[6:])
+				return
+			}
 			switch v {
 			case "italic":
 				parsedFormat.colorFormat += "\x1b[3m"
@@ -190,8 +195,12 @@ func CutePrint(
 	if willUwuify {
 		message = uwuify(message)
 	}
+	neededspaces := parsedFormat.spaces - len(message)
+	if neededspaces < 0 {
+		neededspaces = 0
+	}
 	if !colorold {
-		fmt.Printf("%s%s\x1b[0m", parsedFormat.colorFormat, message)
+		fmt.Printf("%s%s\x1b[0m%s", parsedFormat.colorFormat, message, strings.Repeat(" ", neededspaces))
 	} else {
 		if os.IsNotExist(existcolorconf) {
 			f, _ := os.Create(colorconf)

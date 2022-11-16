@@ -26,7 +26,7 @@ func handleConfig() {
 	if os.IsNotExist(folder) {
 		os.Mkdir(filepath.Dir(data.GetConfigFile()), os.ModePerm)
 	}
-	defaultconfig := "println green neOwOfetchh 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white uptime:   \ninfoln red uptime\nprint white shell:      \ninfoln blue shell\nprint white distro:   \ninfoln blue distro\nprint white terminal:   \ninfoln blue terminal\nprint white memory:   \ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll"
+	defaultconfig := "println green neOwOfetchh 🔥\ninfo white username\nprint blue @\ninfoln blue hostname\nprint white|space=12 uptime:\ninfoln red uptime\nprint white|space=12 shell:\ninfoln blue shell\nprint white|space=12 distro:\ninfoln blue distro\nprint white|space=12 terminal:\ninfoln blue terminal\nprint white|space=12 WM:\ninfoln blue wm\nprint white|space=12 memory:\ninfo blue memoryUsed\nprint white /\ninfoln blue memoryAll"
 	if os.IsNotExist(file) {
 		f, _ := os.Create(data.GetConfigFile())
 		_, _ = f.WriteString(defaultconfig)
