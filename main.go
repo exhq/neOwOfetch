@@ -84,6 +84,8 @@ func handlePrint(action, format string, rest string) {
 			utils.CutePrint(data.GetMemory(true), format)
 		case "wm":
 			utils.CutePrint(data.GetWM(), format)
+		case "ip":
+			utils.CutePrint(data.GetLocalIP(), format)
 		default:
 			print("{UNKNOWN KEYWORD: " + rest + "}")
 		}

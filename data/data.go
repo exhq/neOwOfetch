@@ -2,6 +2,7 @@ package data
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
 	"strconv"
@@ -20,7 +21,21 @@ func GetGPU() string {
 	}
 	return bruh
 }
-
+func GetLocalIP() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ""
+	}
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback the display it
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+	return ""
+}
 func GetUsername() string {
 	cmd := exec.Command("whoami")
 	shell, _ := cmd.Output()
@@ -126,8 +141,6 @@ func GetCPU() {
 	mem_info := make([]byte, 1024)
 	mem.Read(mem_info)
 	mem.Close()
-	// mem_list := strings.Split(string(mem_info), "\n")
-	// mem_map := make(map[string]string)
 	print(mem_info)
 }
 func GetTerminal() string {
