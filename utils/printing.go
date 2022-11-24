@@ -123,16 +123,44 @@ func printLogoIfAtBeginningOfNewLine() {
 func uwuify(message string) string {
 	sentence := strings.Split(message, " ")
 	ret := ""
+	uwuified := false
 	for i, word := range sentence {
-		if !strings.Contains(strings.ToLower(word), "uwu") {
-			word = strings.ReplaceAll(word, "u", "UwU")
 
-			if !strings.Contains(strings.ToLower(word), "owo") {
-				word = strings.ReplaceAll(word, "o", "OwO")
-			}
-			word = strings.ReplaceAll(word, "r", "w")
-
+		ret = strings.ToLower(ret)
+		if len(word) < 4 {
+			ret += word
+			continue
 		}
+
+		if !strings.Contains(word, "uwu") && strings.Contains(word, "u") {
+			word = strings.ReplaceAll(word, "u", "UwU")
+			uwuified = true
+		}
+
+		if !strings.Contains(word, "owo") && strings.Contains(word, "o") {
+			word = strings.ReplaceAll(word, "o", "OwO")
+			uwuified = true
+		}
+
+		if strings.HasSuffix(word, "y") {
+			word = word + " " + "w" + word[:len(word)-1]
+			uwuified = true
+		}
+
+		if uwuified {
+			ret += word
+			if i != 0 {
+				ret += " "
+			}
+			continue
+		}
+
+		if !strings.HasSuffix("n", word) {
+			word = strings.ReplaceAll(word, "n", "ny")
+		}
+
+		word = strings.ReplaceAll(strings.ReplaceAll(word, "l", "w"), "r", "w")
+
 		if i != 0 {
 			ret += " "
 		}
