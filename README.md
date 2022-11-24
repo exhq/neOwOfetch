@@ -17,31 +17,32 @@ The information by default is displayed alongside your operating system's uwuifi
 
 You can further configure NeOwOfetch to your horrible taste. Through the use of command-line flags and idfk i havent implemented it yet.
 
-NeOwOfetch supports almost like 2 different operating systems. From Linux to Linux. If your favourite operating system is unsupported i dont give a shit, ill get to it when i get to it. for now its just arch and ubuntu  
+NeOwOfetch supports almost like 2 different operating systems. From Linux to Linux. If your favourite operating system is unsupported i dont give a shit, ill get to it when i get to it. for now its just arch and ubuntu
 
 <h1 align="center">how to use</h1>
 
-after you decided that you have enough brain damage to use this mess, you can clone this repo (`git clone https://github.com/exhq/neowofetch`)  
+after you decided that you have enough brain damage to use this mess, you can clone this repo (`git clone https://github.com/exhq/neowofetch`)
 
 after cloning this mess, you can either run it (`go run main.go`) or install it (`go install main.go`) which will add it to your /usr/bin
 
+...or you can use <a href="https://nightly.link/exhq/neOwOfetch/workflows/build/main/artifact.zip"> this link</a> to get a binary of the most recent commit
 
 <h1 align="center">customizibility</h1>
 
-after running the program for the first time, there should be two files in `~/.config/neowofetch/`    
+after running the program for the first time, there should be two files in `~/.config/neowofetch/`
+
 ### conf file
 
-`conf` is the layout of the information. 
+`conf` is the layout of the information.
 the syntax is `print/info */bold/bold|blue info/text`
 
 examples:
 `println italic|blue hello world` this would print an italic blue "hello world" that ends with a new line. (if you dont want the newline, replace `println` with `print`)
 
-
 `info bold|yellow|nouwu GPU` this would print out your GPU in a bold yellow color without uwuifying. NOTICE: not all fonts support bold/italic
 
 ### colors file
- 
+
 this file is pretty self explainatory, you can define your own colors in RGB which you can later use in your conf file
 example:
 blue 0 0 255
@@ -49,12 +50,13 @@ blue 0 0 255
 <h1 align="center">commandline arguments</h1>
 
 `--noascii` turns the asciiart off  
-`--usepng`  uses png instead of asciiarts (still on beta)  
+`--usepng` uses png instead of asciiarts (still on beta)  
 `--ascii=<file dir>` uses your txt file as the ascii art  
 `--distro=<distroname>` forced the program to use another distro's asciiart  
 `--nouwu` turns off uwuifiation for all lines  
 `--nocolor` i think you can figure out what this argument does  
 `--noconf` instead of using the config file, itll use a built-in default config  
 `--nocolorconf` ....do i reallt have to explain the differences?  
-`--16color` fallbacks to terminal's configuration instead of relying on terminal RGB support  
+`--16color` fallbacks to terminal's configuration instead of relying on terminal RGB support
+
 <p align="center">jokes aside, the asciiarts are from uwufetch, all credits go to them.</p>
