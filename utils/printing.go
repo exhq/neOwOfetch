@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/exhq/neowofetch/asciiarts"
+	"github.com/exhq/neowofetch/constants"
 	"github.com/exhq/neowofetch/data"
 	"github.com/exhq/neowofetch/images"
 )
@@ -20,30 +21,12 @@ func rgb(r, g, b int) string {
 
 var colors = make(map[string]string)
 var oldcolors = make(map[string]int)
-var color_map = map[string]string{
-	"black":   "30",
-	"red":     "31",
-	"green":   "32",
-	"yellow":  "33",
-	"blue":    "34",
-	"magenta": "35",
-	"cyan":    "36",
-	"white":   "37",
-	"*":       "37",
-}
-
-var namechanges = map[string]string{
-	"linux":  "linuwu",
-	"arch":   "nyarch",
-	"ubuntu": "uwuntu",
-}
 
 var logoIndex = 0
 var isInProgressLine = false
 var logoLines []string
 var logoWidth int
 
-var defaultcolor = "red 255 38 116 \ngreen 16 210 117\nblue 104 174 212\nwhite 250 253 255"
 var pngWidth = 12
 var pngHeight = 12
 var pngData []byte
@@ -60,13 +43,13 @@ func Initcolor() {
 	}
 	if os.IsNotExist(existcolorconf) {
 		f, _ := os.Create(colorconf)
-		_, _ = f.WriteString(defaultcolor)
+		_, _ = f.WriteString(constants.Defaultcolor)
 	}
 
 	c, _ := os.ReadFile(colorconf)
 	content := string(c)
 	if Defaultcolor {
-		content = defaultcolor
+		content = constants.Defaultcolor
 	}
 	lines := strings.Split(string(content), "\n")
 
@@ -132,8 +115,8 @@ func uwuify(message string) string {
 	for i, word := range sentence {
 		word = strings.ToLower(word)
 
-		if namechanges[word] != "" {
-			word = namechanges[word]
+		if constants.Namechanges[word] != "" {
+			word = constants.Namechanges[word]
 			if i != 0 {
 				ret += " "
 			}
@@ -224,7 +207,7 @@ func CutePrint(
 			_, _ = f.WriteString("red 255 0 0 \ngreen 0 255 0\nblue 0 0 255\nwhite 255 255 255")
 		}
 		if colorold && hascolor {
-			for k, v := range color_map {
+			for k, v := range constants.Color_map {
 				if strings.Contains(format, k) {
 					fmt.Printf("\033[1;%sm%s\033[m", v, message)
 					break
