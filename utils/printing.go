@@ -32,6 +32,12 @@ var color_map = map[string]string{
 	"*":       "37",
 }
 
+var namechanges = map[string]string{
+	"linux":  "linuwu",
+	"arch":   "nyarch",
+	"ubuntu": "uwuntu",
+}
+
 var logoIndex = 0
 var isInProgressLine = false
 var logoLines []string
@@ -123,43 +129,26 @@ func printLogoIfAtBeginningOfNewLine() {
 func uwuify(message string) string {
 	sentence := strings.Split(message, " ")
 	ret := ""
-	uwuified := false
 	for i, word := range sentence {
+		word = strings.ToLower(word)
 
-		ret = strings.ToLower(ret)
-		if len(word) < 4 {
-			ret += word
-			continue
-		}
-
-		if !strings.Contains(word, "uwu") && strings.Contains(word, "u") {
-			word = strings.ReplaceAll(word, "u", "UwU")
-			uwuified = true
-		}
-
-		if !strings.Contains(word, "owo") && strings.Contains(word, "o") {
-			word = strings.ReplaceAll(word, "o", "OwO")
-			uwuified = true
-		}
-
-		if strings.HasSuffix(word, "y") {
-			word = word + " " + "w" + word[:len(word)-1]
-			uwuified = true
-		}
-
-		if uwuified {
-			ret += word
+		if namechanges[word] != "" {
+			word = namechanges[word]
 			if i != 0 {
 				ret += " "
 			}
+			ret += word
 			continue
 		}
 
-		if !strings.HasSuffix("n", word) {
-			word = strings.ReplaceAll(word, "n", "ny")
+		if len(word) > 5 {
+			if !strings.Contains(word, "owo") {
+				word = strings.ReplaceAll(word, "o", "OwO")
+			} else if !strings.Contains(word, "uwu") {
+				word = strings.ReplaceAll(word, "u", "UwU")
+			}
+			word = strings.ReplaceAll(strings.ReplaceAll(word, "r", "w"), "l", "w")
 		}
-
-		word = strings.ReplaceAll(strings.ReplaceAll(word, "l", "w"), "r", "w")
 
 		if i != 0 {
 			ret += " "
