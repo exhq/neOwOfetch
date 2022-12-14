@@ -24,11 +24,11 @@ func getSubstring(s string, indices []int) string {
 	return string(s[indices[0]:indices[1]])
 }
 
-func parseshell(bruh string) string {
+func getShellVersion(shellCommand string) string {
 	// https://www.youtube.com/watch?v=YPN0qhSyWy8
-	cmd := bruh + " --version | grep -o -E \"([0-9]\\.?)*\" | head -n1"
+	cmd := shellCommand + " --version | grep -o -E \"([0-9]\\.?)*\" | head -n1"
 	out, _ := exec.Command("bash", "-c", cmd).Output()
-	return bruh + " " + strings.ReplaceAll(string(out), "\n", "")
+	return shellCommand + " " + strings.ReplaceAll(string(out), "\n", "")
 }
 
 func handleConfig() {
@@ -86,7 +86,7 @@ func handlePrint(action, format string, rest string) {
 		case "GPU":
 			utils.CutePrint(data.GetGPU(), format)
 		case "shell":
-			utils.CutePrint(parseshell(data.GetShell()), format)
+			utils.CutePrint(getShellVersion(data.GetShell()), format)
 		case "terminal":
 			utils.CutePrint(data.GetTerminal(), format)
 		case "memoryAll":
