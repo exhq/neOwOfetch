@@ -20,15 +20,12 @@ func checkforconfigfolder() {
 		os.Mkdir(data.GetHome()+"/.config", os.ModePerm)
 	}
 }
-func getSubstring(s string, indices []int) string {
-	return string(s[indices[0]:indices[1]])
-}
 
 func getShellVersion(shellCommand string) string {
 	// https://www.youtube.com/watch?v=YPN0qhSyWy8
 	cmd := shellCommand + " --version | grep -o -E \"([0-9]\\.?)*\" | head -n1"
 	out, _ := exec.Command("bash", "-c", cmd).Output()
-	return shellCommand + " " + strings.ReplaceAll(string(out), "\n", "")
+	return filepath.Base(shellCommand) + " " + strings.ReplaceAll(string(out), "\n", "")
 }
 
 func handleConfig() {
@@ -105,10 +102,25 @@ func handlePrint(action, format string, rest string) {
 		}
 	}
 }
+func runpage() {
+	if utils.Ishelp {
+		println(`neowofetch version x (idk how to implement this)
+--nouwu           turns off uwuifying
+--usepng          uses a png (only supports arch and ubuntu rn)
+--noascii         turns off the ascii
+--nocolor         no color.
+--noconf          uses builtin config instead of looking for one in the filesystem
+--nocolorconf     same thing but for color config :P
+--16color         uses escape codes instead of RGB
+--help            YOU LITERALLY FUCKING RAN IT RIGHT NOW`)
+		os.Exit(0)
+	}
+}
 
 func main() {
-	checkforconfigfolder()
 	utils.Initargs()
+	runpage()
+	checkforconfigfolder()
 	utils.Initcolor()
 	utils.CutePrintInit()
 	handleConfig()

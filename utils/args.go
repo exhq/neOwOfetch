@@ -18,6 +18,7 @@ var Forceddistro string
 var Defaultconf bool = false
 var Defaultcolor bool = false
 var colorold bool = false
+var Ishelp bool = false
 
 func Gethn() string {
 	cmd := exec.Command("whoami")
@@ -50,8 +51,10 @@ func Initargs() {
 				Defaultcolor = true
 			case "--16color":
 				colorold = true
+			case "--help":
+				Ishelp = true
 			default:
-				print("unknown argument: ", argument, "\n")
+				print("unknown argument: ", argument, ". please run --help for help\n")
 				os.Exit(0)
 			}
 		}
