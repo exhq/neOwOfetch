@@ -229,11 +229,12 @@ func CutePrintEnd() {
 		CuteNewLine()
 	}
 	if usepng {
+        fmt.Print("\x1b7")
 		fmt.Printf("\x1b[%dA", logoIndex)
 		fmt.Printf("\x1b]1337;File=inline=1;width=%d;height=%d:", pngWidth, pngHeight)
 		enc := base64.NewEncoder(base64.StdEncoding, os.Stdout)
 		enc.Write(images.DistroImages[getcustomizeddistro()])
 		enc.Close()
-		fmt.Println("\a")
+		fmt.Print("\a\x1b8")
 	}
 }
