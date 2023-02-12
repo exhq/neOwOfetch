@@ -158,7 +158,10 @@ func GetShell() string {
 	return os.Getenv("SHELL")
 }
 func GetWM() string {
-	return os.Getenv("XDG_CURRENT_DESKTOP")
+	cmd := exec.Command("wmctrl", "-m")
+	shell, _ := cmd.Output()
+	line := strings.Split(string(shell), "\n")[0]
+	return strings.ReplaceAll(line, "Name: ", "")
 }
 func getPackages() {
 }
