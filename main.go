@@ -64,44 +64,42 @@ func handlePrint(action, format string, rest string) {
 		utils.CutePrint(rest, format)
 		utils.CuteNewLine()
 	} else if action == "info" || action == "infoln" {
-		switch rest {
-		case "distro":
-			if utils.Asciiforced {
-				utils.CutePrint(utils.Forceddistro, format)
-			} else {
-				utils.CutePrint(data.GetDistro(), format)
-			}
-		case "username":
-			utils.CutePrint(data.GetUsername(), format)
-		case "uptime":
-			no, _ := strconv.Atoi(data.GetUptime())
-			utils.CutePrint(data.FormatTime(no), format)
-		case "hostname":
-			utils.CutePrint(data.Unamebs("-n"), format)
-		case "kernelname":
-			utils.CutePrint(data.Unamebs("-s"), format)
-		case "GPU":
-			utils.CutePrint(data.GetGPU(), format)
-		case "shell":
-			utils.CutePrint(getShellVersion(data.GetShell()), format)
-		case "terminal":
-			utils.CutePrint(data.GetTerminal(), format)
-		case "memoryAll":
-			utils.CutePrint(data.GetMemory(false), format)
-		case "memoryUsed":
-			utils.CutePrint(data.GetMemory(true), format)
-		case "wm":
-			utils.CutePrint(data.GetWM(), format)
-		case "ip":
-			utils.CutePrint(data.GetLocalIP(), format)
-		default:
-			print("{UNKNOWN KEYWORD: " + rest + "}")
+		infoGetters := map[string]func() string{
+			"distro": func() string {
+				if utils.Asciiforced {
+					return utils.Forceddistro
+				}
+				return data.GetDistro()
+			},
+			"username": data.GetUsername,
+			"uptime": func() string {
+				no, _ := strconv.Atoi(data.GetUptime())
+				return data.FormatTime(no)
+			},
+			"hostname":   func() string { return data.Unamebs("-n") },
+			"kernelname": func() string { return data.Unamebs("-s") },
+			"GPU":        data.GetGPU,
+			"shell":      func() string { return getShellVersion(data.GetShell()) },
+			"terminal":   data.GetTerminal,
+			"memoryAll":  func() string { return data.GetMemory(false) },
+			"memoryUsed": func() string { return data.GetMemory(true) },
+			"wm":         data.GetWM,
+			"ip":         data.GetLocalIP,
 		}
+
+		getter, ok := infoGetters[rest]
+		if ok {
+			utils.CutePrint(getter(), format)
+		} else {
+			utils.CutePrint("{UNKNOWN KEYWORD: "+rest+"}", format)
+		}
+
 		if action == "infoln" {
 			utils.CuteNewLine()
 		}
 	}
 }
+
 func runpage() {
 	if utils.Ishelp {
 		println(`neowofetch version x (idk how to implement this)
