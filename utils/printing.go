@@ -163,7 +163,7 @@ func parseFormat(format string) (parsedFormat Format) {
 			case "italic":
 				parsedFormat.colorFormat += "\x1b[3m"
 			case "bold":
-				parsedFormat.colorFormat += "\x1b1"
+				parsedFormat.colorFormat += "\033[1m"
 			case "nouwu":
 				parsedFormat.noUwuOverride = true
 			case "*":
@@ -229,7 +229,7 @@ func CutePrintEnd() {
 		CuteNewLine()
 	}
 	if usepng {
-        fmt.Print("\x1b7")
+		fmt.Print("\x1b7")
 		fmt.Printf("\x1b[%dA", logoIndex)
 		fmt.Printf("\x1b]1337;File=inline=1;width=%d;height=%d:", pngWidth, pngHeight)
 		enc := base64.NewEncoder(base64.StdEncoding, os.Stdout)
