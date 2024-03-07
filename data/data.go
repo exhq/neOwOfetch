@@ -128,19 +128,27 @@ func GetDistroVariable(varname string) string {
 	}
 	return strings.Trim(distro_tuples[varname], "\"")
 }
+
+// FormatTime
+// I wrote this garbage 2 years ago. I'm too lazy to completely rewrite it. its absolute garbage. im so sorry.
 func FormatTime(seconds int) string {
 	minutes := seconds / 60
-	secondsre := strconv.Itoa(seconds % 60)
-	hour := strconv.Itoa(minutes / 60)
-	minutesre := strconv.Itoa(minutes % 60)
-	return (hour + "h " + minutesre + "m " + secondsre + "s")
+	secondsRemaining := strconv.Itoa(seconds % 60)
+	hour := minutes / 60
+	minutesRemaining := strconv.Itoa(minutes % 60)
+	if hour <= 24 {
+		return strconv.Itoa(hour) + "h " + minutesRemaining + "m " + secondsRemaining + "s"
+	}
+	day := strconv.Itoa(hour / 24)
+	hourRemaining := strconv.Itoa(hour % 24)
+	return day + "d " + hourRemaining + "h " + minutesRemaining + "m " + secondsRemaining + "s"
 }
 func GetCPU() {
 	mem, _ := os.Open("/proc/cpuinfo")
-	mem_info := make([]byte, 1024)
-	mem.Read(mem_info)
+	memInfo := make([]byte, 1024)
+	mem.Read(memInfo)
 	mem.Close()
-	print(mem_info)
+	print(memInfo)
 }
 func GetTerminal() string {
 	a, existprgm := os.LookupEnv("TERM_PROGRAM")
