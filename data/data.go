@@ -143,13 +143,14 @@ func FormatTime(seconds int) string {
 	hourRemaining := strconv.Itoa(hour % 24)
 	return day + "d " + hourRemaining + "h " + minutesRemaining + "m " + secondsRemaining + "s"
 }
-func GetCPU() {
-	mem, _ := os.Open("/proc/cpuinfo")
-	memInfo := make([]byte, 1024)
-	mem.Read(memInfo)
-	mem.Close()
-	print(memInfo)
-}
+
+//	func GetCPU() {
+//		mem, _ := os.Open("/proc/cpuinfo")
+//		memInfo := make([]byte, 1024)
+//		mem.Read(memInfo)
+//		mem.Close()
+//		return (memInfo)
+//	}
 func GetTerminal() string {
 	a, existprgm := os.LookupEnv("TERM_PROGRAM")
 	if !existprgm {

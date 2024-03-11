@@ -77,8 +77,8 @@ func handlePrint(action, format string, rest string) {
 				return data.FormatTime(no)
 			},
 			"hostname":   func() string { return data.Unamebs("-n") },
-			"kernelname": func() string { return data.Unamebs("-s") },
-			"CPU":        data.GetGPU,
+			"kernelname": func() string { return data.Unamebs("-srm") },
+			//"CPU":        data.GetCPU,
 			"GPU":        data.GetGPU,
 			"shell":      func() string { return getShellVersion(data.GetShell()) },
 			"terminal":   data.GetTerminal,
